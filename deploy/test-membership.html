@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员权限测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+        }
+        .status.member {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.non-member {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>会员权限功能测试</h1>
+    
+    <div class="test-section">
+        <h2>当前状态</h2>
+        <div id="currentStatus" class="status">检测中...</div>
+        <button class="btn" onclick="checkStatus()">刷新状态</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>模拟会员状态</h2>
+        <button class="btn" onclick="simulateMember()">模拟会员用户</button>
+        <button class="btn" onclick="simulateNonMember()">模拟普通用户</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>功能测试</h2>
+        <p><strong>✅ 已修复：</strong>"立即开通会员"按钮现在会正确跳转到会员购买页面！</p>
+        <p><strong>🔄 界面调整：</strong>现在默认打开"价格调整"界面，所有用户都可以使用基础功能！</p>
+        <p>请打开主应用测试以下功能：</p>
+        <ul>
+            <li><strong>价格调整（默认界面）：</strong> 
+                <ul>
+                    <li>普通用户：可以使用百分比/固定调价，价格取整和区间调价被禁用</li>
+                    <li>会员用户：可以使用所有功能</li>
+                    <li>默认使用"不取整"选项</li>
+                </ul>
+            </li>
+            <li><strong>产品管理：</strong> 
+                <ul>
+                    <li>非会员点击时显示升级提示</li>
+                    <li>会员可正常使用所有功能</li>
+                    <li><strong>🆕 新增：列表项移动功能</strong>
+                        <ul>
+                            <li>上下箭头按钮：精确移动一位</li>
+                            <li>拖拽手柄（≡）：长距离移动</li>
+                            <li><strong>双指拖拽：</strong>按住≡手柄，另一手指滑动屏幕滚动列表</li>
+                            <li>拖拽时有视觉反馈和动画</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><strong>符号更换：</strong> 非会员应显示遮罩层，会员可正常使用</li>
+            <li><strong>立即开通会员按钮：</strong> 
+                <ul>
+                    <li>点击后应自动切换到会员Tab</li>
+                    <li>显示会员套餐购买区域</li>
+                    <li>平滑滚动到购买区域</li>
+                </ul>
+            </li>
+        </ul>
+        <button class="btn" onclick="openMainApp()">打开主应用</button>
+    </div>
+
+    <script>
+        function checkStatus() {
+            // 模拟检查会员状态
+            const isMember = localStorage.getItem('test_member_status') === 'true';
+            const statusDiv = document.getElementById('currentStatus');
+            
+            if (isMember) {
+                statusDiv.className = 'status member';
+                statusDiv.textContent = '👑 会员用户 - 可使用所有功能';
+            } else {
+                statusDiv.className = 'status non-member';
+                statusDiv.textContent = '👤 普通用户 - 部分功能受限';
+            }
+        }
+        
+        function simulateMember() {
+            localStorage.setItem('test_member_status', 'true');
+            // 模拟会员数据
+            const membershipData = {
+                isMember: true,
+                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                packageType: 'monthly'
+            };
+            localStorage.setItem('membership_data', JSON.stringify(membershipData));
+            checkStatus();
+            alert('已设置为会员用户！请刷新主应用查看效果。');
+        }
+        
+        function simulateNonMember() {
+            localStorage.setItem('test_member_status', 'false');
+            // 模拟非会员数据
+            const membershipData = {
+                isMember: false,
+                expiryDate: null,
+                packageType: null
+            };
+            localStorage.setItem('membership_data', JSON.stringify(membershipData));
+            checkStatus();
+            alert('已设置为普通用户！请刷新主应用查看效果。');
+        }
+        
+        function openMainApp() {
+            window.open('index.html', '_blank');
+        }
+        
+        // 页面加载时检查状态
+        checkStatus();
+    </script>
+</body>
+</html>

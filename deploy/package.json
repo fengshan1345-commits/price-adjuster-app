@@ -1,0 +1,26 @@
+{
+  "name": "home-appliance-pricing-app",
+  "version": "1.0.0",
+  "description": "家电报价助手 - 移动端PWA应用",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "pwa",
+    "mobile",
+    "pricing",
+    "home-appliance"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
+
+

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成图标</title>
+</head>
+<body>
+    <h2>点击按钮生成图标</h2>
+    <button onclick="generateIcons()">生成图标文件</button>
+    
+    <script>
+        function generateIcons() {
+            // 生成192x192图标
+            const canvas192 = document.createElement('canvas');
+            canvas192.width = 192;
+            canvas192.height = 192;
+            const ctx192 = canvas192.getContext('2d');
+            
+            // 背景
+            ctx192.fillStyle = '#667eea';
+            ctx192.fillRect(0, 0, 192, 192);
+            
+            // 圆角
+            ctx192.globalCompositeOperation = 'destination-in';
+            ctx192.beginPath();
+            ctx192.roundRect(0, 0, 192, 192, 20);
+            ctx192.fill();
+            
+            // 重置
+            ctx192.globalCompositeOperation = 'source-over';
+            
+            // 绘制¥符号
+            ctx192.fillStyle = 'white';
+            ctx192.font = 'bold 80px Arial';
+            ctx192.textAlign = 'center';
+            ctx192.textBaseline = 'middle';
+            ctx192.fillText('¥', 96, 96);
+            
+            // 下载192图标
+            const link192 = document.createElement('a');
+            link192.download = 'icon-192.png';
+            link192.href = canvas192.toDataURL();
+            link192.click();
+            
+            // 生成512x512图标
+            const canvas512 = document.createElement('canvas');
+            canvas512.width = 512;
+            canvas512.height = 512;
+            const ctx512 = canvas512.getContext('2d');
+            
+            // 背景
+            ctx512.fillStyle = '#667eea';
+            ctx512.fillRect(0, 0, 512, 512);
+            
+            // 圆角
+            ctx512.globalCompositeOperation = 'destination-in';
+            ctx512.beginPath();
+            ctx512.roundRect(0, 0, 512, 512, 50);
+            ctx512.fill();
+            
+            // 重置
+            ctx512.globalCompositeOperation = 'source-over';
+            
+            // 绘制¥符号
+            ctx512.fillStyle = 'white';
+            ctx512.font = 'bold 200px Arial';
+            ctx512.textAlign = 'center';
+            ctx512.textBaseline = 'middle';
+            ctx512.fillText('¥', 256, 256);
+            
+            // 下载512图标
+            const link512 = document.createElement('a');
+            link512.download = 'icon-512.png';
+            link512.href = canvas512.toDataURL();
+            link512.click();
+            
+            alert('图标已生成！请将下载的 icon-192.png 和 icon-512.png 放在同一目录下');
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

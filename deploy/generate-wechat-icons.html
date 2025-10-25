@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信图标生成器 - 28x28 & 108x108</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .info-box {
+            background: #f0f8ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #2196F3;
+        }
+        
+        .info-box ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .preview-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .preview-box {
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .preview-box h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .canvas-wrapper {
+            display: inline-block;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        canvas {
+            display: block;
+            image-rendering: crisp-edges;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        
+        .size-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .file-size {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #2196F3;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+        
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 微信图标生成器</h1>
+        <p class="subtitle">为家电报价助手生成符合微信开放平台要求的图标</p>
+        
+        <div class="info-box">
+            <h3>📋 微信开放平台图标规格要求</h3>
+            <ul>
+                <li><strong>水印图片：</strong>28×28像素，PNG格式，≤300KB</li>
+                <li><strong>高清图片：</strong>108×108像素，PNG格式，≤300KB</li>
+                <li><strong>图标设计：</strong>必须与应用市场图标完全一致</li>
+                <li><strong>背景：</strong>建议使用透明或纯色背景</li>
+            </ul>
+        </div>
+        
+        <div class="preview-section">
+            <div class="preview-box">
+                <h3>水印图片 (28×28)</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="canvas28" width="28" height="28"></canvas>
+                </div>
+                <div class="size-info">28×28 像素</div>
+                <div class="file-size" id="size28">文件大小: 计算中...</div>
+            </div>
+            
+            <div class="preview-box">
+                <h3>高清图片 (108×108)</h3>
+                <div class="canvas-wrapper">
+                    <canvas id="canvas108" width="108" height="108"></canvas>
+                </div>
+                <div class="size-info">108×108 像素</div>
+                <div class="file-size" id="size108">文件大小: 计算中...</div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="generateIcons()">🎨 生成图标</button>
+            <button class="btn-success" onclick="downloadAll()">📥 下载全部</button>
+        </div>
+        
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        let icon28Blob = null;
+        let icon108Blob = null;
+
+        // 绘制图标的函数
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // 清空画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制圆角矩形背景
+            const cornerRadius = size * 0.15;
+            ctx.fillStyle = '#667eea';
+            roundRect(ctx, 0, 0, size, size, cornerRadius);
+            ctx.fill();
+            
+            // 绘制人民币符号 ¥
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `bold ${size * 0.5}px Arial`;
+            ctx.fillText('¥', size / 2, size / 2);
+        }
+        
+        // 绘制圆角矩形
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        // 生成图标
+        function generateIcons() {
+            const canvas28 = document.getElementById('canvas28');
+            const canvas108 = document.getElementById('canvas108');
+            
+            // 绘制两个尺寸的图标
+            drawIcon(canvas28, 28);
+            drawIcon(canvas108, 108);
+            
+            // 转换为 Blob 并计算文件大小
+            canvas28.toBlob(blob => {
+                icon28Blob = blob;
+                document.getElementById('size28').textContent = 
+                    `文件大小: ${formatFileSize(blob.size)} ${blob.size <= 300 * 1024 ? '✓' : '✗ 超过300KB'}`;
+            }, 'image/png');
+            
+            canvas108.toBlob(blob => {
+                icon108Blob = blob;
+                document.getElementById('size108').textContent = 
+                    `文件大小: ${formatFileSize(blob.size)} ${blob.size <= 300 * 1024 ? '✓' : '✗ 超过300KB'}`;
+            }, 'image/png');
+            
+            showStatus('图标生成成功！可以下载使用了。', 'success');
+        }
+        
+        // 下载单个图标
+        function downloadIcon(canvas, filename) {
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+        
+        // 下载全部图标
+        function downloadAll() {
+            if (!icon28Blob || !icon108Blob) {
+                showStatus('请先生成图标！', 'error');
+                return;
+            }
+            
+            const canvas28 = document.getElementById('canvas28');
+            const canvas108 = document.getElementById('canvas108');
+            
+            // 下载 28x28
+            downloadIcon(canvas28, 'icon-wechat-28x28.png');
+            
+            // 稍微延迟下载第二个文件
+            setTimeout(() => {
+                downloadIcon(canvas108, 'icon-wechat-108x108.png');
+                showStatus('图标已全部下载！请上传到微信开放平台。', 'success');
+            }, 500);
+        }
+        
+        // 显示状态消息
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = 'status ' + type;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        }
+        
+        // 页面加载时自动生成图标
+        window.onload = function() {
+            generateIcons();
+        };
+    </script>
+</body>
+</html>
+
+
