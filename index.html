@@ -2873,11 +2873,23 @@
                 let lastScrollTime = 0;
                 let scrollInterval = null;
                 let hasScrolled = false;
+                let touchCount = 0;
+                let isMultiTouch = false;
                 
                 // 开始拖拽
                 const startDrag = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
+                    
+                    // 检测触摸点数量
+                    if (e.type === 'touchstart') {
+                        touchCount = e.touches.length;
+                        isMultiTouch = touchCount > 1;
+                        console.log('触摸开始，触摸点数量:', touchCount);
+                    } else {
+                        touchCount = 1;
+                        isMultiTouch = false;
+                    }
                     
                     draggedElement = element;
                     draggedIndex = index;
@@ -2885,14 +2897,14 @@
                     isDragging = true;
                     hasScrolled = false;
                     
-                    console.log('开始拖拽:', index); // 调试信息
+                    console.log('开始拖拽:', index, '多指模式:', isMultiTouch);
                     
                     // 添加事件监听
                     document.addEventListener('mousemove', handleMove);
                     document.addEventListener('mouseup', handleEnd);
-                    document.addEventListener('touchmove', handleMove, { passive: false });
-                    document.addEventListener('touchend', handleEnd);
-                    document.addEventListener('touchcancel', handleEnd);
+                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    document.addEventListener('touchend', handleTouchEnd);
+                    document.addEventListener('touchcancel', handleTouchEnd);
                     
                     // 添加滚动监听
                     const resultsContainer = document.getElementById('pm_resultsContainer');
@@ -2902,25 +2914,65 @@
                     startDetection();
                 };
                 
-                // 移动处理
+                // 触摸移动处理
+                function handleTouchMove(e) {
+                    if (!isDragging) return;
+                    
+                    // 更新触摸点数量
+                    touchCount = e.touches.length;
+                    isMultiTouch = touchCount > 1;
+                    
+                    console.log('触摸移动，触摸点数量:', touchCount, '多指模式:', isMultiTouch);
+                    
+                    // 单指模式：正常拖拽
+                    if (!isMultiTouch) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const clientX = e.touches[0].clientX;
+                        const clientY = e.touches[0].clientY;
+                        
+                        console.log('单指拖拽位置:', clientX, clientY);
+                        
+                        // 检测目标元素
+                        const elementBelow = document.elementFromPoint(clientX, clientY);
+                        console.log('检测到的元素:', elementBelow);
+                        
+                        const resultItem = elementBelow?.closest('.result-item');
+                        console.log('找到的结果项:', resultItem);
+                        
+                        if (resultItem && resultItem !== draggedElement) {
+                            // 清除之前的高亮
+                            document.querySelectorAll('.result-item').forEach(item => {
+                                item.classList.remove('drag-over');
+                            });
+                            
+                            // 高亮目标元素
+                            resultItem.classList.add('drag-over');
+                            console.log('高亮目标元素');
+                        }
+                    }
+                    // 多指模式：允许滚动，不阻止默认行为
+                }
+                
+                // 鼠标移动处理
                 function handleMove(e) {
                     if (!isDragging) return;
                     
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    let clientX, clientY;
-                    if (e.type === 'touchmove') {
-                        clientX = e.touches[0].clientX;
-                        clientY = e.touches[0].clientY;
-                    } else {
-                        clientX = e.clientX;
-                        clientY = e.clientY;
-                    }
+                    const clientX = e.clientX;
+                    const clientY = e.clientY;
+                    
+                    console.log('鼠标拖拽位置:', clientX, clientY);
                     
                     // 检测目标元素
                     const elementBelow = document.elementFromPoint(clientX, clientY);
+                    console.log('检测到的元素:', elementBelow);
+                    
                     const resultItem = elementBelow?.closest('.result-item');
+                    console.log('找到的结果项:', resultItem);
                     
                     if (resultItem && resultItem !== draggedElement) {
                         // 清除之前的高亮
@@ -2930,6 +2982,7 @@
                         
                         // 高亮目标元素
                         resultItem.classList.add('drag-over');
+                        console.log('高亮目标元素');
                     }
                 }
                 
@@ -2939,6 +2992,8 @@
                     
                     lastScrollTime = Date.now();
                     hasScrolled = true;
+                    
+                    console.log('检测到滚动');
                     
                     // 检测屏幕中心的目标元素
                     updateTarget();
@@ -3015,11 +3070,60 @@
                     }
                 }
                 
+                // 触摸结束处理
+                function handleTouchEnd(e) {
+                    if (!isDragging) return;
+                    
+                    // 更新触摸点数量
+                    touchCount = e.touches.length;
+                    isMultiTouch = touchCount > 1;
+                    
+                    console.log('触摸结束，剩余触摸点数量:', touchCount);
+                    
+                    // 只有当所有触摸点都离开时才结束拖拽
+                    if (touchCount === 0) {
+                        handleEnd(e);
+                    }
+                }
+                
                 // 结束拖拽
                 function handleEnd(e) {
                     if (!isDragging) return;
                     
-                    console.log('结束拖拽'); // 调试信息
+                    console.log('结束拖拽');
+                    
+                    // 检查当前鼠标/触摸位置的目标元素
+                    let clientX, clientY;
+                    if (e.type === 'touchend' && e.changedTouches && e.changedTouches.length > 0) {
+                        clientX = e.changedTouches[0].clientX;
+                        clientY = e.changedTouches[0].clientY;
+                    } else if (e.type === 'mouseup') {
+                        clientX = e.clientX;
+                        clientY = e.clientY;
+                    }
+                    
+                    if (clientX && clientY) {
+                        console.log('结束位置:', clientX, clientY);
+                        
+                        const elementBelow = document.elementFromPoint(clientX, clientY);
+                        const targetElement = elementBelow?.closest('.result-item');
+                        
+                        if (targetElement && targetElement !== draggedElement) {
+                            const targetIndex = parseInt(targetElement.dataset.index);
+                            console.log('目标索引:', targetIndex, '拖拽索引:', draggedIndex);
+                            
+                            if (targetIndex !== draggedIndex) {
+                                // 移动元素
+                                const item = parsedItems.splice(draggedIndex, 1)[0];
+                                parsedItems.splice(targetIndex, 0, item);
+                                
+                                console.log('移动元素完成');
+                                
+                                // 重新显示
+                                sortAndDisplayItems();
+                            }
+                        }
+                    }
                     
                     // 如果滚动过，检查最终位置
                     if (hasScrolled) {
@@ -3042,13 +3146,15 @@
                     draggedIndex = null;
                     isDragging = false;
                     hasScrolled = false;
+                    touchCount = 0;
+                    isMultiTouch = false;
                     
                     // 移除事件监听
                     document.removeEventListener('mousemove', handleMove);
                     document.removeEventListener('mouseup', handleEnd);
-                    document.removeEventListener('touchmove', handleMove);
-                    document.removeEventListener('touchend', handleEnd);
-                    document.removeEventListener('touchcancel', handleEnd);
+                    document.removeEventListener('touchmove', handleTouchMove);
+                    document.removeEventListener('touchend', handleTouchEnd);
+                    document.removeEventListener('touchcancel', handleTouchEnd);
                     
                     // 移除滚动监听
                     const resultsContainer = document.getElementById('pm_resultsContainer');
