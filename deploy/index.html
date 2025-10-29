@@ -26,11 +26,11 @@
             background: #f5f5f5;
             overflow-x: hidden;
             padding-top: 50px; /* 为顶部Tab栏留出空间 */
-            padding-bottom: env(safe-area-inset-bottom); /* iOS安全区域 */
+            padding-bottom: 70px; /* 为底部导航栏留出空间 */
         }
         
-        /* ========== 顶部Tab导航栏 ========== */
-        .tab-bar {
+        /* ========== 顶部标题栏 ========== */
+        .top-header {
             position: fixed;
             top: 0;
             left: 0;
@@ -38,34 +38,131 @@
             height: 50px;
             background: #667eea;
             display: flex;
+            align-items: center;
+            justify-content: space-between;
             z-index: 1000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0 15px;
             padding-top: env(safe-area-inset-top); /* iOS刘海屏适配 */
         }
         
-        .tab-item {
-            flex: 1;
+        .top-header .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .top-header .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
         
-        .tab-item.active {
-            color: white;
-            border-bottom-color: white;
+        .header-icon-btn:active {
+            background: rgba(255,255,255,0.3);
+            transform: scale(0.95);
+        }
+        
+        /* ========== 底部导航栏 ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding-bottom: env(safe-area-inset-bottom); /* iOS安全区域 */
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            gap: 4px;
+        }
+        
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-item-icon {
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item-label {
+            font-size: 12px;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active .nav-item-icon {
+            color: #667eea;
+            transform: scale(1.1);
+        }
+        
+        .nav-item.active .nav-item-label {
+            color: #667eea;
             font-weight: 600;
         }
         
-        .tab-item:active {
-            background: rgba(255,255,255,0.1);
+        .nav-item.active.history .nav-item-icon {
+            color: #ff6b35;
+        }
+        
+        .nav-item.active.history .nav-item-label {
+            color: #ff6b35;
+        }
+        
+        /* 中间突出按钮样式 */
+        .nav-item.center-btn {
+            flex: 0 0 auto;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            position: relative;
+            bottom: 15px;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+        }
+        
+        .nav-item.center-btn .special-icon {
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .nav-item.center-btn.active {
+            background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+            transform: scale(1.05);
+        }
+        
+        .tab-bar {
+            display: none; /* 隐藏旧的顶部导航 */
         }
         
         /* ========== 内容区域 ========== */
@@ -197,6 +294,41 @@
         .result-item.drag-over {
             border-color: #667eea;
             background: #f0f8ff;
+        }
+        
+        /* 插入指示线样式 */
+        .insert-indicator {
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            margin: 4px 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+            position: relative;
+            z-index: 999;
+        }
+        
+        .insert-indicator::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #667eea;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        
+        .insert-indicator::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-right: 8px solid #667eea;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
         }
         
         .drag-handle {
@@ -445,6 +577,13 @@
             padding: 4px 8px;
             border-radius: 4px;
             border: 1px solid #bbdefb;
+        }
+        
+        /* 深色模式：产品管理的价格标签改为蓝色文字、浅灰色背景、浅蓝色边框 */
+        .theme-dark #productManager .blue-price {
+            color: #2196F3 !important;  /* 蓝色文字 */
+            background-color: #e0e0e0 !important;  /* 浅灰色背景 */
+            border-color: #90caf9 !important;  /* 浅蓝色边框 */
         }
         
         #productManager .no-price {
@@ -1121,6 +1260,15 @@
             border-bottom: 2px solid #f0f0f0;
         }
         
+        /* 深色模式：设置界面标题文字改为浅色 */
+        .theme-dark .settings-section .section-title {
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark .setting-item label {
+            color: #e0e0e0 !important;
+        }
+        
         .setting-item {
             display: flex;
             justify-content: space-between;
@@ -1376,6 +1524,272 @@
             border-color: #667eea;
         }
         
+        /* 深色模式：解析界面、输入框、容器 */
+        .theme-dark #pm_inputText,
+        .theme-dark #pa_productInput,
+        .theme-dark .input-text {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：所有输入框和文本区域 */
+        .theme-dark textarea,
+        .theme-dark input[type="text"],
+        .theme-dark input[type="number"] {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark #pm_resultsContainer,
+        .theme-dark .result-item,
+        .theme-dark .test-section,
+        .theme-dark .container {
+            background-color: #1a1a1a !important;
+        }
+        
+        .theme-dark #pm_resultsContainer .result-item {
+            background-color: #2d2d2d !important;
+            border-color: #444 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark .result-text {
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：筛选栏、历史记录卡片 */
+        .theme-dark .history-filter-bar,
+        .theme-dark .history-card,
+        .theme-dark .settings-section {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark .history-filter-bar select {
+            background-color: #3d3d3d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：统计卡片 */
+        .theme-dark .stat-item-vertical,
+        .theme-dark .stat-item {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark .stat-number {
+            color: #667eea !important;
+        }
+        
+        /* 深色模式：按钮 */
+        .theme-dark .btn {
+            background-color: #3d3d3d !important;
+            color: #e0e0e0 !important;
+            border-color: #555 !important;
+        }
+        
+        .theme-dark .btn.btn-primary {
+            background-color: #667eea !important;
+            color: white !important;
+        }
+        
+        .theme-dark .btn.danger {
+            background-color: #e74c3c !important;
+            color: white !important;
+        }
+        
+        .theme-dark .btn.btn-secondary {
+            background-color: #3d3d3d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：解析结果区域 - 边框变细，文字更亮（统一所有界面） */
+        .theme-dark #pa_resultArea .result-item,
+        .theme-dark #sc_resultArea .result-item,
+        .theme-dark .result-item {
+            border: 1px solid #444 !important;  /* 边框变细 */
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 统一所有解析文字的颜色，使用浅色保证可读性 */
+        .theme-dark #pa_resultArea .result-text,
+        .theme-dark #sc_resultArea .result-text,
+        .theme-dark .result-text {
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：解析结果显示区域背景 */
+        .theme-dark #pa_resultArea,
+        .theme-dark #sc_resultArea {
+            background-color: #1a1a1a !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：解析文本内容 - 排除价格标签，让价格可以显示红色和绿色 */
+        .theme-dark #pa_resultArea *:not(.result-price):not(.price-increase):not(.price-decrease):not(.result-price.new),
+        .theme-dark #sc_resultArea * {
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：蓝色价格标签里的白色文字调为灰黑 */
+        .theme-dark .price-tag,
+        .theme-dark .btn[style*="blue"],
+        .theme-dark .btn-primary {
+            color: #4a4a4a !important;  /* 灰黑色，不再用白色 */
+        }
+        
+        /* 深色模式：所有蓝色按钮的文字都变灰黑 */
+        .theme-dark .btn.btn-primary {
+            color: #4a4a4a !important;
+        }
+        
+        /* 深色模式：符号更换的所有输入框 */
+        .theme-dark #sc_inputText,
+        .theme-dark #sc_separatorInput,
+        .theme-dark textarea#sc_footerText {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：价格调整的设置面板 - 将浅绿色背景改为灰黑色 */
+        .theme-dark .price-controls {
+            background-color: #2d2d2d !important;
+            border-color: #444 !important;
+        }
+        
+        .theme-dark .price-controls * {
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：下拉菜单和输入框背景 */
+        .theme-dark select,
+        .theme-dark select.control-input {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        .theme-dark input[type="number"],
+        .theme-dark input.control-input {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 浅色模式：涨价红色和降价绿色 - 只改字体颜色，不要背景阴影 */
+        .price-increase,
+        [class*="price-up"],
+        [style*="red"],
+        .result-price.new.price-increase {  /* 涨价：只改字体为红色 */
+            color: #e74c3c !important;  /* 涨价红色 */
+        }
+        
+        .price-decrease,
+        [class*="price-down"],
+        [style*="green"],
+        .result-price.new.price-decrease {  /* 降价：只改字体为绿色 */
+            color: #27ae60 !important;  /* 降价绿色 */
+        }
+        
+        .result-price.original {  /* 原价（删除线） */
+            color: #999 !important;
+            text-decoration: line-through !important;
+        }
+        
+        /* 深色模式：保持涨价红色和降价绿色 - 只改字体颜色，不要背景阴影 */
+        .theme-dark .price-increase,
+        .theme-dark [class*="price-up"],
+        .theme-dark [style*="red"],
+        .theme-dark .result-price.new.price-increase,
+        .theme-dark .result-price.new.price-increase * {
+            color: #ff6666 !important;  /* 涨价红色（深色模式稍微亮一点） */
+        }
+        
+        .theme-dark .price-decrease,
+        .theme-dark [class*="price-down"],
+        .theme-dark [style*="green"],
+        .theme-dark .result-price.new.price-decrease,
+        .theme-dark .result-price.new.price-decrease * {
+            color: #66ff66 !important;  /* 降价绿色（深色模式稍微亮一点） */
+        }
+        
+        /* 深色模式：原价删除线 - 使用更暗的灰色 */
+        .theme-dark .result-price.original {
+            color: #666 !important;  /* 深色模式下更暗的灰色 */
+            text-decoration: line-through !important;
+            text-decoration-color: #666 !important;  /* 删除线也是灰色 */
+        }
+        
+        /* 确保深色模式下新价格标签的颜色不被覆盖 */
+        .theme-dark div.result-price span.result-price.new.price-increase {
+            color: #ff6666 !important;
+        }
+        
+        .theme-dark div.result-price span.result-price.new.price-decrease {
+            color: #66ff66 !important;
+        }
+        
+        /* 原价删除线样式 */
+        del,
+        [style*="text-decoration: line-through"] {
+            color: #999 !important;
+            text-decoration-color: #999 !important;
+        }
+        
+        .theme-dark del,
+        .theme-dark [style*="text-decoration: line-through"] {
+            color: #888 !important;
+            text-decoration-color: #888 !important;
+        }
+        
+        /* 深色模式：符号更换页面的结尾说明框 */
+        .theme-dark .test-section textarea {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：确保符号更换的结尾说明输入框及其父容器也是深灰色 */
+        .theme-dark #sc_footerText,
+        .theme-dark #symbolChanger textarea,
+        .theme-dark #symbolChanger .input-area {
+            background-color: #2d2d2d !important;
+            border-color: #555 !important;
+            color: #e0e0e0 !important;
+        }
+        
+        /* 深色模式：统计卡片边框变细且变暗 */
+        .theme-dark .stat-item,
+        .theme-dark .stat-item-vertical {
+            border: 1px solid #3d3d3d !important;  /* 更暗的边框 */
+            background-color: #2d2d2d !important;
+        }
+        
+        /* 深色模式：所有白色大边框变暗 */
+        .theme-dark .stats,
+        .theme-dark .stats-vertical,
+        .theme-dark .test-section {
+            background-color: #1a1a1a !important;
+            border: 1px solid #3d3d3d !important;
+        }
+        
+        .theme-dark .stats .stat-item,
+        .theme-dark .stats-vertical .stat-item-vertical {
+            border-color: #3d3d3d !important;
+            background-color: #2d2d2d !important;
+        }
+        
+        /* 深色模式：符号更换结尾说明区域的父容器 - 覆盖内联样式 */
+        .theme-dark #symbolChanger .input-area[style*="background"] {
+            background: #1a1a1a !important;
+            border-color: #444 !important;
+        }
+        
         /* 字体大小样式 */
         .font-small {
             font-size: 14px;
@@ -1409,6 +1823,643 @@
         .font-large .btn {
             font-size: 18px;
             padding: 12px 24px;
+        }
+        
+        /* ========== 字体大小应用到解析内容 ========== */
+        /* 小字体：价格调整 */
+        .font-small #priceAdjuster .result-content {
+            font-size: 14px !important;
+        }
+        .font-small #priceAdjuster .result-price {
+            font-size: 16px !important;
+        }
+        
+        /* 小字体：符号更换 */
+        .font-small #symbolChanger .result-content {
+            font-size: 14px !important;
+        }
+        .font-small #symbolChanger .result-price {
+            font-size: 16px !important;
+        }
+        
+        /* 大字体：价格调整 */
+        .font-large #priceAdjuster .result-content {
+            font-size: 18px !important;
+        }
+        .font-large #priceAdjuster .result-price {
+            font-size: 20px !important;
+        }
+        
+        /* 大字体：符号更换 */
+        .font-large #symbolChanger .result-content {
+            font-size: 18px !important;
+        }
+        .font-large #symbolChanger .result-price {
+            font-size: 20px !important;
+        }
+        
+        /* ========== 超大字体样式 ========== */
+        .font-extra-large {
+            font-size: 24px;
+        }
+        
+        .font-extra-large .tab-item {
+            font-size: 24px;
+        }
+        
+        .font-extra-large .container h1 {
+            font-size: 40px;
+        }
+        
+        .font-extra-large .btn {
+            font-size: 24px;
+            padding: 16px 32px;
+        }
+        
+        /* 超大字体：价格调整 */
+        .font-extra-large #priceAdjuster .result-content {
+            font-size: 24px !important;
+        }
+        .font-extra-large #priceAdjuster .result-price {
+            font-size: 28px !important;
+        }
+        
+        /* 超大字体：符号更换 */
+        .font-extra-large #symbolChanger .result-content {
+            font-size: 24px !important;
+        }
+        .font-extra-large #symbolChanger .result-price {
+            font-size: 28px !important;
+        }
+        
+        /* ========== 编辑弹窗字体大小 ========== */
+        /* 小字体：产品管理编辑弹窗的textarea */
+        .font-small .modal-content textarea {
+            font-size: 14px !important;
+        }
+        
+        /* 大字体：产品管理编辑弹窗的textarea */
+        .font-large .modal-content textarea {
+            font-size: 18px !important;
+        }
+        
+        /* 超大字体：产品管理编辑弹窗的textarea */
+        .font-extra-large .modal-content textarea {
+            font-size: 24px !important;
+        }
+        
+        /* ========== 深色模式：编辑弹窗样式 ========== */
+        .theme-dark .modal-content {
+            background-color: #2d2d2d !important;
+        }
+        
+        .theme-dark .modal-content h3,
+        .theme-dark .modal-content textarea {
+            color: #e0e0e0 !important;
+        }
+        
+        /* 日期分组标题样式 */
+        .date-group-header {
+            background: #f5f5f5;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .date-group-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .theme-dark .date-group-header {
+            background: #2d2d2d;
+        }
+        
+        .theme-dark .date-group-header h3 {
+            color: #e0e0e0;
+        }
+        
+        /* ========== 历史记录样式 ========== */
+        .history-filter-bar {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .history-filter-bar .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .history-filter-bar label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .history-filter-bar select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .history-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .history-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .history-card.comparing {
+            border: 2px solid #ff6b35;
+        }
+        
+        .history-card.comparing::before {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b35;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        /* 视图切换器 */
+        .view-switcher {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .view-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+        
+        .view-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+        
+        /* 来源筛选标签栏 */
+        .history-filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .filter-tab.active {
+            background: #e3f2fd;
+            color: #2196F3;
+            font-weight: 600;
+        }
+        
+        /* 日历式日期选择器 */
+        .calendar-picker {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-header button {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .calendar-header button:hover {
+            background: #f5f5f5;
+        }
+        
+        .current-month {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .calendar-weekdays span {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            padding: 4px;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day:hover {
+            background: #f5f5f5;
+        }
+        
+        .calendar-day-number {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .calendar-day-count {
+            font-size: 10px;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        .calendar-day.selected {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .calendar-day.selected .calendar-day-count {
+            color: white;
+        }
+        
+        .calendar-day.has-records {
+            background: #f0f8ff;
+        }
+        
+        .calendar-day.has-records.selected {
+            background: #2196F3;
+        }
+        
+        /* 宫格视图 */
+        .history-list.grid-view {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        
+        .history-list.grid-view .history-card {
+            padding: 15px;
+            min-width: 0; /* 防止内容撑破列宽 */
+            box-sizing: border-box;
+        }
+
+        /* 网格视图下的日期标题：占满整行，不悬浮 */
+        .history-list.grid-view ~ .date-group-header,
+        .history-list.grid-view .date-group-header {
+            position: static;
+            top: auto;
+            margin: 8px 0;
+            grid-column: 1 / -1;
+            z-index: 1;
+        }
+
+        /* 若日期标题在网格容器内创建，确保横跨两列 */
+        .history-list.grid-view .date-group-header {
+            grid-column: 1 / -1;
+        }
+        
+        .history-list.grid-view .history-card-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        /* 列表视图 */
+        .history-list.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .history-list.list-view .history-card {
+            display: flex;
+            flex-direction: row;
+            padding: 12px;
+        }
+        
+        .history-list.list-view .history-card-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .history-card-thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .history-card-thumbnail:hover {
+            border-color: #667eea;
+        }
+        
+        /* 文本预览缩略图样式 */
+        .history-card-thumbnail-text {
+            width: 100%;
+            min-height: 150px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        
+        .history-card-thumbnail-text:hover {
+            border-color: #667eea;
+            background: #f0f8ff;
+        }
+        
+        .preview-line {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+            margin: 3px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .preview-line:first-child {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .preview-line:last-child {
+            color: #666;
+        }
+        
+        /* 宫格视图中的文本预览 */
+        .history-list.grid-view .history-card-thumbnail-text {
+            min-height: 150px;
+            height: 150px;
+        }
+        
+        /* 列表视图中的文本预览 */
+        .history-list.list-view .history-card-thumbnail-text {
+            width: 100px;
+            min-height: 100px;
+            height: 100px;
+            padding: 8px;
+            font-size: 11px;
+        }
+        
+        .history-list.list-view .preview-line {
+            font-size: 11px;
+            line-height: 1.4;
+            margin: 2px 0;
+        }
+        
+        /* 列表视图中如果只有一行，居中显示 */
+        .history-list.list-view .history-card-thumbnail-text:has(.preview-line:only-child) {
+            justify-content: center;
+        }
+        
+        .theme-dark .history-card-thumbnail-text {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+        
+        .theme-dark .history-card-thumbnail-text:hover {
+            background: #3a3a3a;
+            border-color: #667eea;
+        }
+        
+        .theme-dark .preview-line {
+            color: #e0e0e0;
+        }
+        
+        .theme-dark .preview-line:first-child {
+            color: #f0f0f0;
+        }
+        
+        .theme-dark .preview-line:last-child {
+            color: #b0b0b0;
+        }
+        
+        .history-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .history-card-date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .history-card-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .history-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .history-card-actions .btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 13px;
+        }
+        
+        .compare-floating-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        
+        .compare-floating-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .empty-desc {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .image-viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .image-viewer-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            touch-action: none;
+        }
+        
+        .image-viewer-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10001;
+        }
+        
+        .image-viewer-close:hover {
+            background: rgba(255,255,255,0.3);
         }
         
         /* ========== 响应式设计 ========== */
@@ -1447,16 +2498,39 @@
             }
         }
     </style>
+    
+    <!-- 已移除 html2canvas 依赖，保存历史采用纯文本，避免外部加载超时导致延迟 -->
 </head>
 <body>
-    <!-- 顶部Tab导航栏 -->
-    <div class="tab-bar">
-        <div class="tab-item" data-tab="productManager">产品管理</div>
-        <div class="tab-item active" data-tab="priceAdjuster">价格调整</div>
-        <div class="tab-item" data-tab="symbolChanger">符号更换</div>
-        <div class="tab-item" data-tab="membership" style="color: #ff6b35;">👑 会员</div>
-        <div class="tab-item" data-tab="settings">⚙️ 设置</div>
-        <div id="membershipStatusBadge" class="membership-badge" style="display: none;">会员</div>
+    <!-- 顶部标题栏 -->
+    <div class="top-header">
+        <div class="page-title" id="topPageTitle">价格调整</div>
+        <div class="header-actions">
+            <button class="header-icon-btn" onclick="openCurrentPageMenu()">⋮</button>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <div class="nav-item" data-tab="historyViewer" onclick="switchTab('historyViewer')">
+            <div class="nav-item-icon">明细</div>
+            <div class="nav-item-label">历史</div>
+        </div>
+        <div class="nav-item active" data-tab="productManager" onclick="switchTab('productManager')">
+            <div class="nav-item-icon">产品</div>
+            <div class="nav-item-label">产品管理</div>
+        </div>
+        <div class="nav-item center-btn" data-tab="priceAdjuster" onclick="switchTab('priceAdjuster')">
+            <div class="nav-item-icon special-icon">记账</div>
+        </div>
+        <div class="nav-item" data-tab="symbolChanger" onclick="switchTab('symbolChanger')">
+            <div class="nav-item-icon">符号</div>
+            <div class="nav-item-label">符号更换</div>
+        </div>
+        <div class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+            <div class="nav-item-icon">我的</div>
+            <div class="nav-item-label">我的</div>
+        </div>
     </div>
     
     <!-- 界面1：产品管理 -->
@@ -1474,6 +2548,7 @@
                 <button id="pm_deleteSelectedBtn" class="danger" style="display: none;">删除选中</button>
                 <button id="pm_cancelDeleteBtn" class="secondary" style="display: none;">取消</button>
                 <button id="pm_copyBtn">复制结果</button>
+                <button id="pm_saveHistoryBtn" onclick="HistoryManager.showSaveDialog()" style="background: #ff6b35;">📅 保存历史</button>
             </div>
             
             <div class="sort-controls">
@@ -1524,6 +2599,7 @@
                     <button class="btn" onclick="PriceAdjuster.parseProducts()">🔍 解析价格</button>
                     <button class="btn btn-success" onclick="PriceAdjuster.applyPricing()">📈 应用调价</button>
                     <button class="btn" onclick="PriceAdjuster.copyResults()">📋 复制结果</button>
+                    <button class="btn" onclick="HistoryManager.showSaveDialog('priceAdjuster')" style="background: #ff6b35;">📅 保存历史</button>
                 </div>
             </div>
             
@@ -1552,8 +2628,8 @@
                     <div class="control-row">
                         <span class="control-label">价格取整:</span>
                         <select class="control-input" id="pa_priceRounding">
-                            <option value="none" selected>不取整</option>
-                            <option value="ones">个位取整</option>
+                            <option value="none">不取整</option>
+                            <option value="ones" selected>个位取整</option>
                             <option value="tens">十位取整</option>
                             <option value="hundreds">百位取整</option>
                         </select>
@@ -1562,11 +2638,11 @@
                         <span class="control-label">调价模式:</span>
                         <select class="control-input" id="pa_pricingMode" onchange="PriceAdjuster.togglePricingMode()">
                             <option value="uniform">统一调价</option>
-                            <option value="range">区间调价</option>
+                            <option value="range" selected>区间调价</option>
                         </select>
                     </div>
                     <!-- 区间调价设置 -->
-                    <div id="pa_rangePricingSection" style="display: none; margin-top: 3vw; padding: 3vw; background: #f0f8ff; border-radius: 8px;">
+                    <div id="pa_rangePricingSection" style="display: block; margin-top: 3vw; padding: 3vw; background: #f0f8ff; border-radius: 8px;">
                         <div style="font-weight: 600; margin-bottom: 2vw; font-size: 4vw;">价格区间设置:</div>
                         <div class="control-row">
                             <span class="control-label">0-999:</span>
@@ -1652,6 +2728,7 @@
                     <button class="btn" onclick="SymbolChanger.parseProducts()">🔍 解析价格</button>
                     <button class="btn btn-primary" onclick="SymbolChanger.applyPriceSeparator()" style="margin-top: 2vw;">✨ 应用更换</button>
                     <button class="btn btn-success" onclick="SymbolChanger.copyResults()" style="margin-top: 2vw;">📋 复制结果</button>
+                    <button class="btn" onclick="HistoryManager.showSaveDialog('symbolChanger')" style="background: #ff6b35; margin-top: 2vw;">📅 保存历史</button>
                 </div>
             </div>
             
@@ -1811,12 +2888,116 @@
         </div>
     </div>
     
-    <!-- 界面5：设置中心 -->
+    <!-- 界面5：历史记录 -->
+    <div id="historyViewer" class="tab-content">
+        <div class="container">
+            <div class="header" style="position: relative;">
+                <h1 class="title">📅 历史记录</h1>
+                <p class="subtitle">查看和对比历史报价</p>
+                
+                <!-- 视图切换器 -->
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="grid" onclick="HistoryManager.switchView('grid')">
+                        <span class="icon">⊞</span>
+                    </button>
+                    <button class="view-btn" data-view="list" onclick="HistoryManager.switchView('list')">
+                        <span class="icon">☰</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 来源筛选标签栏 -->
+            <div class="history-filter-tabs">
+                <button class="filter-tab active" data-filter="all" onclick="HistoryManager.filterBySource('all')">
+                    ⭐ 全部
+                </button>
+                <button class="filter-tab" data-filter="productManager" onclick="HistoryManager.filterBySource('productManager')">
+                    📦 产品管理
+                </button>
+                <button class="filter-tab" data-filter="priceAdjuster" onclick="HistoryManager.filterBySource('priceAdjuster')">
+                    💰 价格调整
+                </button>
+                <button class="filter-tab" data-filter="symbolChanger" onclick="HistoryManager.filterBySource('symbolChanger')">
+                    🔄 符号更换
+                </button>
+            </div>
+            
+            <!-- 日历式日期选择器 -->
+            <div class="calendar-picker">
+                <div class="calendar-header">
+                    <button class="prev-month" onclick="HistoryManager.changeMonth(-1)">‹</button>
+                    <span class="current-month" id="calendarCurrentMonth">2025 / 10</span>
+                    <button class="next-month" onclick="HistoryManager.changeMonth(1)">›</button>
+                </div>
+                <div class="calendar-weekdays">
+                    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                </div>
+                <div class="calendar-days" id="calendarDays">
+                    <!-- 动态生成日期格子 -->
+                </div>
+            </div>
+            
+            <!-- 筛选工具栏 -->
+            <div class="history-filter-bar" style="display: none;">
+                <div class="filter-row">
+                    <label>年份：</label>
+                    <select id="historyYearSelect">
+                        <option value="all">全部</option>
+                    </select>
+                </div>
+                <div class="filter-row">
+                    <label>月份：</label>
+                    <select id="historyMonthSelect">
+                        <option value="all">全部</option>
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                <div class="filter-row">
+                    <button class="btn btn-secondary" onclick="HistoryManager.filterRecords()">筛选</button>
+                    <button class="btn" onclick="HistoryManager.clearFilter()">重置</button>
+                </div>
+            </div>
+            
+            <!-- 操作工具栏 -->
+            <div class="history-actions">
+                <button class="btn btn-primary" onclick="HistoryManager.enterCompareMode()">选择对比</button>
+                <button class="btn btn-danger" onclick="HistoryManager.deleteAll()" style="display: none;">清空历史</button>
+            </div>
+            
+            <!-- 历史记录列表 -->
+            <div class="history-list grid-view" id="historyListContainer">
+                <!-- 空状态提示 -->
+                <div class="empty-state" id="historyEmptyState">
+                    <div class="empty-icon">📅</div>
+                    <div class="empty-title">暂无历史记录</div>
+                    <div class="empty-desc">在产品管理界面保存记录后，将显示在这里</div>
+                </div>
+            </div>
+            
+            <!-- 对比模式浮动按钮 -->
+            <button class="compare-floating-btn" id="compareFloatingBtn" style="display: none;" onclick="HistoryManager.startCompare()">
+                开始对比（<span id="compareCount">0</span>）
+            </button>
+        </div>
+    </div>
+    
+    <!-- 界面6：我的（整合会员、登录、帮助、设置） -->
     <div id="settings" class="tab-content">
         <div class="container">
             <div class="header">
-                <h1 class="title">⚙️ 设置中心</h1>
-                <p class="subtitle">个性化您的使用体验</p>
+                <h1 class="title">👤 我的</h1>
+                <p class="subtitle">个人中心</p>
             </div>
             
             <!-- 用户信息卡片 -->
@@ -1827,13 +3008,38 @@
                     <p id="userStatus">点击登录享受更多功能</p>
                 </div>
                 <div class="login-buttons" id="loginButtons">
-                    <button class="btn btn-primary" onclick="Settings.handlePhoneLogin()" id="phoneLoginBtn">📱 一键登录</button>
-                    <button class="btn btn-secondary" onclick="Settings.showLoginModal()" id="otherLoginBtn">其他登录</button>
+                    <button class="btn btn-primary" onclick="Settings.handlePhoneLogin()" id="phoneLoginBtn">📱 登录</button>
                 </div>
             </div>
             
-            <!-- 设置选项 -->
+            <!-- 快捷功能区 -->
             <div class="settings-sections">
+                <!-- 会员中心 -->
+                <div class="settings-section">
+                    <h3 class="section-title">👑 会员与增值</h3>
+                    <div class="setting-item">
+                        <span>会员中心</span>
+                        <button class="btn btn-small" onclick="switchTab('membership')">前往</button>
+                    </div>
+                    <div class="setting-item">
+                        <span>会员状态</span>
+                        <span id="membershipStatusInSettings" style="color: #999;">免费用户</span>
+                    </div>
+                </div>
+                
+                <!-- 帮助与支持 -->
+                <div class="settings-section">
+                    <h3 class="section-title">📚 帮助与支持</h3>
+                    <div class="setting-item">
+                        <span>使用帮助</span>
+                        <button class="btn btn-secondary" onclick="Settings.showHelp()">查看</button>
+                    </div>
+                    <div class="setting-item">
+                        <span>意见反馈</span>
+                        <button class="btn btn-secondary" onclick="Settings.showFeedback()">提交</button>
+                    </div>
+                </div>
+                
                 <!-- 外观设置 -->
                 <div class="settings-section">
                     <h3 class="section-title">🎨 外观设置</h3>
@@ -1851,6 +3057,7 @@
                             <option value="small">小</option>
                             <option value="medium" selected>中</option>
                             <option value="large">大</option>
+                            <option value="extra-large">超大</option>
                         </select>
                     </div>
                 </div>
@@ -2870,34 +4077,42 @@
                 let draggedElement = null;
                 let draggedIndex = null;
                 let isDragging = false;
-                let lastScrollTime = 0;
-                let scrollInterval = null;
-                let hasScrolled = false;
-                let touchCount = 0;
-                let isMultiTouch = false;
+                let autoScrollInterval = null;
+                let scrollSpeed = 0;
                 
                 // 开始拖拽
                 const startDrag = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    // 检测触摸点数量
-                    if (e.type === 'touchstart') {
-                        touchCount = e.touches.length;
-                        isMultiTouch = touchCount > 1;
-                        console.log('触摸开始，触摸点数量:', touchCount);
-                    } else {
-                        touchCount = 1;
-                        isMultiTouch = false;
-                    }
-                    
                     draggedElement = element;
                     draggedIndex = index;
-                    element.classList.add('dragging');
                     isDragging = true;
-                    hasScrolled = false;
                     
-                    console.log('开始拖拽:', index, '多指模式:', isMultiTouch);
+                    // 创建拖拽时的视觉元素（克隆）
+                    const dragClone = element.cloneNode(true);
+                    const rect = element.getBoundingClientRect();
+                    
+                    dragClone.style.position = 'fixed';
+                    dragClone.style.top = rect.top + 'px';
+                    dragClone.style.left = rect.left + 'px';
+                    dragClone.style.width = rect.width + 'px';
+                    dragClone.style.height = rect.height + 'px';
+                    dragClone.style.opacity = '0.8';
+                    dragClone.style.zIndex = '1000';
+                    dragClone.style.pointerEvents = 'none';
+                    dragClone.style.transform = 'rotate(2deg)';
+                    dragClone.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                    dragClone.style.transition = 'none';
+                    dragClone.id = 'drag-clone';
+                    
+                    // 隐藏原始元素
+                    element.style.opacity = '0.3';
+                    
+                    // 添加到body
+                    document.body.appendChild(dragClone);
+                    
+                    console.log('开始拖拽:', index);
                     
                     // 添加事件监听
                     document.addEventListener('mousemove', handleMove);
@@ -2905,48 +4120,27 @@
                     document.addEventListener('touchmove', handleTouchMove, { passive: false });
                     document.addEventListener('touchend', handleTouchEnd);
                     document.addEventListener('touchcancel', handleTouchEnd);
-                    
-                    // 添加滚动监听
-                    const resultsContainer = document.getElementById('pm_resultsContainer');
-                    resultsContainer.addEventListener('scroll', handleScroll, { passive: true });
-                    
-                    // 开始检测
-                    startDetection();
                 };
                 
                 // 触摸移动处理
                 function handleTouchMove(e) {
                     if (!isDragging) return;
                     
-                    // 更新触摸点数量
-                    touchCount = e.touches.length;
-                    isMultiTouch = touchCount > 1;
+                    const clientX = e.touches[0].clientX;
+                    const clientY = e.touches[0].clientY;
                     
-                    console.log('触摸移动，触摸点数量:', touchCount, '多指模式:', isMultiTouch);
+                    // 让拖拽元素跟随手指移动
+                    updateDragElementPosition(clientX, clientY);
                     
-                    // 单指模式：正常拖拽
-                    if (!isMultiTouch) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        const clientX = e.touches[0].clientX;
-                        const clientY = e.touches[0].clientY;
-                        
-                        // 检测目标元素
-                        const elementBelow = document.elementFromPoint(clientX, clientY);
-                        const resultItem = elementBelow?.closest('.result-item');
-                        
-                        if (resultItem && resultItem !== draggedElement) {
-                            // 清除之前的高亮
-                            document.querySelectorAll('.result-item').forEach(item => {
-                                item.classList.remove('drag-over');
-                            });
-                            
-                            // 高亮目标元素
-                            resultItem.classList.add('drag-over');
-                        }
-                    }
-                    // 多指模式：允许滚动，不阻止默认行为
+                    // 更新目标高亮（精确跟随手指位置）
+                    updateTargetHighlightAtPosition(clientX, clientY);
+                    
+                    // 检测边缘并自动滚动
+                    checkAutoScroll(clientY);
+                    
+                    // 允许页面滚动，但阻止默认行为
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
                 
                 // 鼠标移动处理
@@ -2959,36 +4153,156 @@
                     const clientX = e.clientX;
                     const clientY = e.clientY;
                     
-                    // 检测目标元素
+                    // 让拖拽元素跟随鼠标移动
+                    updateDragElementPosition(clientX, clientY);
+                    
+                    // 更新目标高亮（精确跟随鼠标位置）
+                    updateTargetHighlightAtPosition(clientX, clientY);
+                    
+                    // 检测边缘并自动滚动
+                    checkAutoScroll(clientY);
+                }
+                
+                // 边缘检测和自动滚动（以解析框为基准）
+                function checkAutoScroll(clientY) {
+                    const resultsContainer = document.getElementById('pm_resultsContainer');
+                    const containerRect = resultsContainer.getBoundingClientRect();
+                    
+                    // 计算触摸点相对于解析框的位置
+                    const relativeY = clientY - containerRect.top;
+                    const containerHeight = containerRect.height;
+                    
+                    // 如果触摸点不在解析框内，停止滚动
+                    if (relativeY < 0 || relativeY > containerHeight) {
+                        if (autoScrollInterval) {
+                            clearInterval(autoScrollInterval);
+                            autoScrollInterval = null;
+                            scrollSpeed = 0;
+                        }
+                        return;
+                    }
+                    
+                    // 计算相对于解析框的百分比位置
+                    const percentage = relativeY / containerHeight;
+                    
+                    // 停止之前的自动滚动
+                    if (autoScrollInterval) {
+                        clearInterval(autoScrollInterval);
+                        autoScrollInterval = null;
+                        scrollSpeed = 0;
+                    }
+                    
+                    // 检测是否在边缘区域（解析框顶部0%-30%或底部60%-100%）
+                    // 顶部不保留，底部也不保留，解析框中间为基准，上移或下移30%就可以滑动很快
+                    if (percentage >= 0 && percentage < 0.30) {
+                        // 解析框顶部0%-30%区域，向上滚动
+                        const speed = Math.max(3, Math.round((0.30 - percentage) * 25 + 4)); // 4-9像素/帧
+                        startAutoScroll(-speed);
+                        console.log('向上滚动，速度:', speed, '位置百分比:', (percentage * 100).toFixed(1) + '%');
+                    } else if (percentage > 0.60) {
+                        // 解析框底部60%-100%区域，向下滚动
+                        const speed = Math.max(3, Math.round((percentage - 0.60) * 25 + 4)); // 4-9像素/帧
+                        startAutoScroll(speed);
+                        console.log('向下滚动，速度:', speed, '位置百分比:', (percentage * 100).toFixed(1) + '%');
+                    }
+                }
+                
+                // 开始自动滚动
+                function startAutoScroll(speed) {
+                    if (autoScrollInterval) return;
+                    
+                    scrollSpeed = speed;
+                    const resultsContainer = document.getElementById('pm_resultsContainer');
+                    
+                    autoScrollInterval = setInterval(() => {
+                        if (!isDragging) {
+                            clearInterval(autoScrollInterval);
+                            autoScrollInterval = null;
+                            return;
+                        }
+                        
+                        // 执行滚动
+                        resultsContainer.scrollTop += scrollSpeed;
+                        
+                        // 更新目标高亮
+                        updateTargetHighlight();
+                    }, 16); // 约60fps
+                }
+                
+                // 更新拖拽元素位置（让元素跟随手指/鼠标移动）
+                function updateDragElementPosition(clientX, clientY) {
+                    const dragClone = document.getElementById('drag-clone');
+                    if (!dragClone || !draggedElement) return;
+                    
+                    // 获取拖拽按钮的位置
+                    const dragHandle = draggedElement.querySelector('.drag-handle');
+                    if (!dragHandle) return;
+                    
+                    const handleRect = dragHandle.getBoundingClientRect();
+                    
+                    // 计算手指相对于拖拽按钮的偏移
+                    const offsetX = clientX - handleRect.left;
+                    const offsetY = clientY - handleRect.top;
+                    
+                    // 设置克隆元素位置，保持与拖拽按钮的相对位置
+                    dragClone.style.left = (handleRect.left + offsetX - handleRect.width) + 'px';
+                    dragClone.style.top = (handleRect.top + offsetY) + 'px';
+                }
+                
+                
+                // 更新目标高亮（精确跟随手指/鼠标位置）
+                function updateTargetHighlightAtPosition(clientX, clientY) {
+                    if (!isDragging) return;
+                    
+                    // 清除之前的高亮和指示线
+                    clearAllHighlights();
+                    
+                    // 在手指/鼠标位置检测目标元素
                     const elementBelow = document.elementFromPoint(clientX, clientY);
                     const resultItem = elementBelow?.closest('.result-item');
                     
                     if (resultItem && resultItem !== draggedElement) {
-                        // 清除之前的高亮
-                        document.querySelectorAll('.result-item').forEach(item => {
-                            item.classList.remove('drag-over');
-                        });
-                        
-                        // 高亮目标元素
-                        resultItem.classList.add('drag-over');
+                        // 创建插入指示线
+                        createInsertIndicator(resultItem, clientY);
                     }
                 }
                 
-                // 滚动处理
-                function handleScroll(e) {
-                    if (!isDragging) return;
+                // 清除所有高亮和指示线
+                function clearAllHighlights() {
+                    // 清除行高亮
+                    document.querySelectorAll('.result-item').forEach(item => {
+                        item.classList.remove('drag-over');
+                    });
                     
-                    lastScrollTime = Date.now();
-                    hasScrolled = true;
-                    
-                    console.log('检测到滚动');
-                    
-                    // 检测屏幕中心的目标元素
-                    updateTarget();
+                    // 清除插入指示线
+                    const existingIndicator = document.querySelector('.insert-indicator');
+                    if (existingIndicator) {
+                        existingIndicator.remove();
+                    }
                 }
                 
-                // 更新目标
-                function updateTarget() {
+                // 创建插入指示线
+                function createInsertIndicator(targetItem, clientY) {
+                    const targetRect = targetItem.getBoundingClientRect();
+                    const targetCenterY = targetRect.top + targetRect.height / 2;
+                    
+                    // 判断插入位置：在目标元素上方还是下方
+                    const insertAbove = clientY < targetCenterY;
+                    
+                    // 创建指示线元素
+                    const indicator = document.createElement('div');
+                    indicator.className = 'insert-indicator';
+                    
+                    // 插入到目标位置
+                    if (insertAbove) {
+                        targetItem.parentNode.insertBefore(indicator, targetItem);
+                    } else {
+                        targetItem.parentNode.insertBefore(indicator, targetItem.nextSibling);
+                    }
+                }
+                
+                // 更新目标高亮
+                function updateTargetHighlight() {
                     if (!isDragging) return;
                     
                     const resultsContainer = document.getElementById('pm_resultsContainer');
@@ -3010,30 +4324,8 @@
                     }
                 }
                 
-                // 开始检测
-                function startDetection() {
-                    if (scrollInterval) clearInterval(scrollInterval);
-                    
-                    scrollInterval = setInterval(() => {
-                        if (!isDragging) {
-                            clearInterval(scrollInterval);
-                            return;
-                        }
-                        
-                        // 如果正在滚动，更新目标
-                        if (hasScrolled && Date.now() - lastScrollTime < 200) {
-                            updateTarget();
-                        }
-                        
-                        // 如果停止滚动超过1秒，检查最终位置
-                        if (Date.now() - lastScrollTime > 1000 && hasScrolled) {
-                            checkFinal();
-                        }
-                    }, 100);
-                }
-                
                 // 检查最终位置
-                function checkFinal() {
+                function checkFinalPosition() {
                     if (!isDragging) return;
                     
                     const resultsContainer = document.getElementById('pm_resultsContainer');
@@ -3061,17 +4353,7 @@
                 // 触摸结束处理
                 function handleTouchEnd(e) {
                     if (!isDragging) return;
-                    
-                    // 更新触摸点数量
-                    touchCount = e.touches.length;
-                    isMultiTouch = touchCount > 1;
-                    
-                    console.log('触摸结束，剩余触摸点数量:', touchCount);
-                    
-                    // 只有当所有触摸点都离开时才结束拖拽
-                    if (touchCount === 0) {
-                        handleEnd(e);
-                    }
+                    handleEnd(e);
                 }
                 
                 // 结束拖拽
@@ -3080,9 +4362,101 @@
                     
                     console.log('结束拖拽');
                     
-                    // 如果滚动过，检查最终位置
-                    if (hasScrolled) {
-                        checkFinal();
+                    // 停止自动滚动
+                    if (autoScrollInterval) {
+                        clearInterval(autoScrollInterval);
+                        autoScrollInterval = null;
+                    }
+                    
+                    // 基于插入指示线位置进行交换
+                    const insertIndicator = document.querySelector('.insert-indicator');
+                    if (insertIndicator) {
+                        // 获取插入指示线的位置
+                        const indicatorNextSibling = insertIndicator.nextSibling;
+                        const indicatorPreviousSibling = insertIndicator.previousSibling;
+                        
+                        let targetIndex;
+                        
+                        if (indicatorNextSibling && indicatorNextSibling.classList && indicatorNextSibling.classList.contains('result-item')) {
+                            // 指示线在目标元素上方，插入到目标元素的位置
+                            targetIndex = parseInt(indicatorNextSibling.dataset.index);
+                        } else if (indicatorPreviousSibling && indicatorPreviousSibling.classList && indicatorPreviousSibling.classList.contains('result-item')) {
+                            // 指示线在目标元素下方，插入到目标元素的下一个位置
+                            targetIndex = parseInt(indicatorPreviousSibling.dataset.index) + 1;
+                        } else {
+                            // 如果找不到相邻元素，尝试通过父容器查找
+                            const container = insertIndicator.parentNode;
+                            const allItems = container.querySelectorAll('.result-item');
+                            
+                            // 找到指示线在DOM中的位置
+                            let indicatorPosition = -1;
+                            for (let i = 0; i < container.children.length; i++) {
+                                if (container.children[i] === insertIndicator) {
+                                    indicatorPosition = i;
+                                    break;
+                                }
+                            }
+                            
+                            if (indicatorPosition >= 0) {
+                                // 计算应该插入到哪个位置
+                                let itemCount = 0;
+                                for (let i = 0; i < indicatorPosition; i++) {
+                                    if (container.children[i].classList.contains('result-item')) {
+                                        itemCount++;
+                                    }
+                                }
+                                targetIndex = itemCount;
+                            }
+                        }
+                        
+                        if (targetIndex !== undefined && targetIndex !== draggedIndex) {
+                            // 移动数组元素
+                            const item = parsedItems.splice(draggedIndex, 1)[0];
+                            
+                            // 向下拖拽时需要调整目标索引（因为splice删除后，后续索引减1）
+                            let adjustedTargetIndex = targetIndex;
+                            if (draggedIndex < targetIndex) {
+                                adjustedTargetIndex = targetIndex - 1;
+                            }
+                            
+                            parsedItems.splice(adjustedTargetIndex, 0, item);
+                            
+                            // 重新显示列表
+                            sortAndDisplayItems();
+                            
+                            console.log('元素已插入到位置:', adjustedTargetIndex, '(原目标:', targetIndex, ', 拖拽起始:', draggedIndex, ')');
+                        }
+                    } else {
+                        // 如果没有插入指示线，使用原来的逻辑作为备用
+                        let clientX, clientY;
+                        if (e.type === 'touchend' && e.changedTouches && e.changedTouches.length > 0) {
+                            clientX = e.changedTouches[0].clientX;
+                            clientY = e.changedTouches[0].clientY;
+                        } else if (e.type === 'mouseup') {
+                            clientX = e.clientX;
+                            clientY = e.clientY;
+                        }
+                        
+                        if (clientX && clientY) {
+                            const elementBelow = document.elementFromPoint(clientX, clientY);
+                            const targetElement = elementBelow?.closest('.result-item');
+                            
+                            if (targetElement && targetElement !== draggedElement) {
+                                const targetIndex = parseInt(targetElement.dataset.index);
+                                const draggedIndex = parseInt(draggedElement.dataset.index);
+                                
+                                if (targetIndex !== draggedIndex) {
+                                    // 交换数组元素
+                                    const item = parsedItems.splice(draggedIndex, 1)[0];
+                                    parsedItems.splice(targetIndex, 0, item);
+                                    
+                                    // 重新显示列表
+                                    sortAndDisplayItems();
+                                    
+                                    console.log('元素已移动到位置:', targetIndex);
+                                }
+                            }
+                        }
                     }
                     
                     // 清理
@@ -3091,18 +4465,30 @@
                 
                 // 清理
                 function cleanup() {
-                    // 移除高亮
-                    document.querySelectorAll('.result-item').forEach(item => {
-                        item.classList.remove('dragging', 'drag-over');
-                    });
+                    // 移除克隆元素
+                    const dragClone = document.getElementById('drag-clone');
+                    if (dragClone) {
+                        dragClone.remove();
+                    }
+                    
+                    // 重置原始元素样式
+                    if (draggedElement) {
+                        draggedElement.style.opacity = '';
+                    }
+                    
+                    // 清除所有高亮和指示线
+                    clearAllHighlights();
                     
                     // 重置状态
                     draggedElement = null;
                     draggedIndex = null;
                     isDragging = false;
-                    hasScrolled = false;
-                    touchCount = 0;
-                    isMultiTouch = false;
+                    
+                    // 停止自动滚动
+                    if (autoScrollInterval) {
+                        clearInterval(autoScrollInterval);
+                        autoScrollInterval = null;
+                    }
                     
                     // 移除事件监听
                     document.removeEventListener('mousemove', handleMove);
@@ -3110,16 +4496,6 @@
                     document.removeEventListener('touchmove', handleTouchMove);
                     document.removeEventListener('touchend', handleTouchEnd);
                     document.removeEventListener('touchcancel', handleTouchEnd);
-                    
-                    // 移除滚动监听
-                    const resultsContainer = document.getElementById('pm_resultsContainer');
-                    resultsContainer.removeEventListener('scroll', handleScroll);
-                    
-                    // 清理定时器
-                    if (scrollInterval) {
-                        clearInterval(scrollInterval);
-                        scrollInterval = null;
-                    }
                 }
                 
                 // 绑定事件
@@ -3228,6 +4604,7 @@
                 `;
                 
                 const modalContent = document.createElement('div');
+                modalContent.className = 'modal-content';
                 modalContent.style.cssText = `
                     background: white;
                     border-radius: 12px;
@@ -3248,13 +4625,24 @@
                 
                 const textarea = document.createElement('textarea');
                 textarea.value = item.originalLine;
+                
+                // 根据当前字体大小设置动态调整
+                let fontSize = '16px'; // 默认中字体
+                if (document.body.classList.contains('font-small')) {
+                    fontSize = '14px';
+                } else if (document.body.classList.contains('font-large')) {
+                    fontSize = '18px';
+                } else if (document.body.classList.contains('font-extra-large')) {
+                    fontSize = '24px';
+                }
+                
                 textarea.style.cssText = `
                     width: 100%;
                     min-height: 120px;
                     padding: 12px;
                     border: 2px solid #e0e0e0;
                     border-radius: 8px;
-                    font-size: 14px;
+                    font-size: ${fontSize};
                     resize: vertical;
                     box-sizing: border-box;
                 `;
@@ -3764,9 +5152,12 @@
                         if (isPricingApplied && item.newPrices) {
                             priceDisplay = item.prices.map((priceInfo, index) => {
                                 const newPrice = item.newPrices[index] || priceInfo.price;
+                                const priceChange = newPrice - priceInfo.price;
+                                const priceClass = priceChange > 0 ? 'price-increase' : (priceChange < 0 ? 'price-decrease' : '');
+                                
                                 return `
                                     <span class="result-price original">¥${priceInfo.price}</span>
-                                    <span class="result-price new">¥${newPrice}</span>
+                                    <span class="result-price new ${priceClass}">¥${newPrice}</span>
                                 `;
                             }).join(' ');
                         } else {
@@ -4409,7 +5800,35 @@
                     } else {
                         // 第三步：如果没有方括号，删除价格前的符号，但保留括号
                         while (startIndex > 0) {
-                            const char = line[startIndex - 1];
+                            // 检查是否是Emoji（需要处理代理对）
+                            let charLength = 1;
+                            let char = line[startIndex - 1];
+                            
+                            // 检查是否是高代理对（Emoji的第一个字符）
+                            if (startIndex > 1) {
+                                const prevChar = line[startIndex - 2];
+                                const currentChar = line[startIndex - 1];
+                                
+                                // 检查是否是代理对（Emoji）
+                                if (prevChar && currentChar) {
+                                    const prevCode = prevChar.charCodeAt(0);
+                                    const currentCode = currentChar.charCodeAt(0);
+                                    
+                                    // 高代理对范围：0xD800-0xDBFF，低代理对范围：0xDC00-0xDFFF
+                                    if (prevCode >= 0xD800 && prevCode <= 0xDBFF && 
+                                        currentCode >= 0xDC00 && currentCode <= 0xDFFF) {
+                                        charLength = 2;
+                                        char = line.substring(startIndex - 2, startIndex);
+                                        startIndex -= 2; // 跳过两个字符
+                                    } else {
+                                        startIndex--;
+                                    }
+                                } else {
+                                    startIndex--;
+                                }
+                            } else {
+                                startIndex--;
+                            }
                             
                             // 如果是字母、数字、中文，停止删除
                             if (/[A-Za-z0-9\u4e00-\u9fa5]/.test(char)) {
@@ -4423,15 +5842,13 @@
                             
                             // 删除其他符号：价格符号、emoji、标点符号、斜杠等
                             const isPriceSymbol = /[¥$€£₹💰￥]/.test(char);
-                            const isEmoji = char.codePointAt(0) > 0x1F300;
+                            const isEmoji = isEmojiChar(char);
                             const isPunctuation = /[!@#$%^&*()_+=\[\]{}|;':",./<>?~`-]/.test(char);
                             const isSlash = char === '/';
                             
                             if (!isPriceSymbol && !isEmoji && !isPunctuation && !isSlash) {
                                 break;
                             }
-                            
-                            startIndex--;
                         }
                     }
                     
@@ -4441,6 +5858,44 @@
                 }
                 
                 return line;
+            }
+            
+            // 新增：更准确的Emoji检测函数
+            function isEmojiChar(char) {
+                if (!char) return false;
+                
+                // 处理代理对（Emoji）
+                if (char.length === 2) {
+                    const code1 = char.charCodeAt(0);
+                    const code2 = char.charCodeAt(1);
+                    
+                    // 高代理对 + 低代理对 = Emoji
+                    if (code1 >= 0xD800 && code1 <= 0xDBFF && 
+                        code2 >= 0xDC00 && code2 <= 0xDFFF) {
+                        return true;
+                    }
+                }
+                
+                // 处理单个字符的Emoji
+                const codePoint = char.codePointAt(0);
+                
+                // Emoji Unicode 范围
+                return (
+                    // 表情符号和象形文字
+                    (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) || // 杂项符号和象形文字
+                    (codePoint >= 0x1F600 && codePoint <= 0x1F64F) || // 表情符号
+                    (codePoint >= 0x1F680 && codePoint <= 0x1F6FF) || // 交通和地图符号
+                    (codePoint >= 0x1F700 && codePoint <= 0x1F77F) || // 炼金术符号
+                    (codePoint >= 0x1F780 && codePoint <= 0x1F7FF) || // 几何形状扩展
+                    (codePoint >= 0x1F800 && codePoint <= 0x1F8FF) || // 补充箭头-C
+                    (codePoint >= 0x1F900 && codePoint <= 0x1F9FF) || // 补充符号和象形文字
+                    (codePoint >= 0x1FA00 && codePoint <= 0x1FA6F) || // 象棋符号
+                    (codePoint >= 0x1FA70 && codePoint <= 0x1FAFF) || // 符号和象形文字扩展-A
+                    (codePoint >= 0x2600 && codePoint <= 0x26FF) ||   // 杂项符号
+                    (codePoint >= 0x2700 && codePoint <= 0x27BF) ||   // 装饰符号
+                    (codePoint >= 0xFE00 && codePoint <= 0xFE0F) ||  // 变体选择器
+                    (codePoint >= 0x1F1E0 && codePoint <= 0x1F1FF)   // 区域指示符号
+                );
             }
             
             function showCopySuccess() {
@@ -4778,9 +6233,13 @@
             }
             
             function isMember() {
-                return membershipData.isMember && 
-                       membershipData.expiryDate && 
-                       new Date(membershipData.expiryDate) > new Date();
+                // 测试阶段：临时返回true，启用所有会员功能
+                return true;
+                
+                // 原始代码（已注释）：
+                // return membershipData.isMember && 
+                //        membershipData.expiryDate && 
+                //        new Date(membershipData.expiryDate) > new Date();
             }
             
             function getMemberDaysLeft() {
@@ -5511,6 +6970,1077 @@
             };
         })();
         
+        // ========== 历史记录管理器 ==========
+        const HistoryManager = (function() {
+            let historyRecords = [];
+            let isCompareMode = false;
+            let selectedRecords = [];
+            
+            function init() {
+                loadRecords();
+                populateYearOptions();
+                // 统一监听历史更新事件，收到后立即刷新视图与日历
+                window.addEventListener('history:updated', function() {
+                    renderCalendar();
+                    renderRecords();
+                });
+            }
+            
+            function loadRecords() {
+                const saved = localStorage.getItem('historyRecords');
+                if (saved) {
+                    historyRecords = JSON.parse(saved);
+                }
+            }
+            
+            function saveRecords() {
+                localStorage.setItem('historyRecords', JSON.stringify(historyRecords));
+            }
+            
+            function populateYearOptions() {
+                const yearSelect = document.getElementById('historyYearSelect');
+                if (!yearSelect) return;
+                
+                const currentYear = new Date().getFullYear();
+                const years = [currentYear];
+                historyRecords.forEach(record => {
+                    const recordYear = new Date(record.timestamp).getFullYear();
+                    if (!years.includes(recordYear)) {
+                        years.push(recordYear);
+                    }
+                });
+                years.sort((a, b) => b - a);
+                
+                years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year + '年';
+                    yearSelect.appendChild(option);
+                });
+            }
+            
+            function saveRecord(source, title) {
+                // 默认来源为产品管理
+                if (!source) source = 'productManager';
+                
+                // 根据来源确定截图目标容器
+                let container, products = [];
+                
+                if (source === 'productManager') {
+                    container = document.getElementById('pm_resultsContainer');
+                    if (!container || container.children.length === 0) {
+                        alert('请先解析并获取产品列表');
+                        return;
+                    }
+                    
+                    // 提取产品信息（与“复制结果”一致，读取 .item-text；无价格也保存）
+                    container.querySelectorAll('.result-item').forEach(item => {
+                        const textEl = item.querySelector('.item-text');
+                        const fallbackEl = item.querySelector('.result-text');
+                        const text = (textEl ? textEl.textContent : (fallbackEl ? fallbackEl.textContent : item.textContent)).trim();
+                        const prices = findExplicitPrices(text);
+                        products.push({
+                            text: text,
+                            price: prices.length > 0 ? prices[0] : ''
+                        });
+                    });
+                } else if (source === 'priceAdjuster') {
+                    container = document.getElementById('pa_resultArea');
+                    if (!container || container.children.length === 0) {
+                        alert('请先解析并获取调价结果');
+                        return;
+                    }
+                    
+                    // 提取调价数据（以 PriceAdjuster.displayResults 生成的结构为准）
+                    container.querySelectorAll('.result-item').forEach(item => {
+                        const contentEl = item.querySelector('.result-content');
+                        const originalPriceEl = item.querySelector('.result-price.original');
+                        const newPriceEl = item.querySelector('.result-price.new');
+                        const textContent = (contentEl ? contentEl.textContent : '').trim();
+                        if (!textContent) return;
+                        if (originalPriceEl && newPriceEl) {
+                            products.push({
+                                text: textContent,
+                                originalPrice: originalPriceEl.textContent.replace('¥', '').replace(/,/g, ''),
+                                newPrice: newPriceEl.textContent.replace('¥', '').replace(/,/g, '')
+                            });
+                        } else {
+                            // 无价格的纯文本行也保存
+                            products.push({ text: textContent });
+                        }
+                    });
+                } else if (source === 'symbolChanger') {
+                    container = document.getElementById('sc_resultArea');
+                    if (!container || container.children.length === 0) {
+                        alert('请先解析并获取符号更换结果');
+                        return;
+                    }
+                    
+                    // 提取符号更换后的数据：按“复制结果”的规则组合
+                    container.querySelectorAll('.result-item').forEach(item => {
+                        const contentEl = item.querySelector('.result-content');
+                        const priceEl = item.querySelector('.result-price');
+                        let line = (contentEl ? contentEl.textContent : item.textContent).trim();
+                        if (priceEl && priceEl.textContent.trim()) {
+                            const raw = priceEl.textContent.trim();
+                            const numMatch = raw.match(/\d[\d.,]*/);
+                            const num = numMatch ? numMatch[0].replace(/,/g, '') : '';
+                            const sym = raw.replace(/[\d.,]/g, '');
+                            if (num) {
+                                const idx = line.lastIndexOf(num);
+                                if (idx >= 0) {
+                                    let start = idx;
+                                    while (start > 0 && /[\s¥$€£₹💰￥!@#$%^&*()_+\-=/\\`~\[\]{}|;:'",.<>?]/.test(line[start-1])) {
+                                        start--;
+                                    }
+                                    line = line.substring(0, start) + sym + line.substring(start);
+                                }
+                            }
+                        }
+                        products.push({ text: line });
+                    });
+                } else {
+                    alert('未知的记录来源');
+                    return;
+                }
+                
+                const now = new Date();
+                const timestamp = now.getTime();
+                
+                // 提取前两行作为预览文本
+                let previewLines = [];
+                if (products.length > 0) {
+                    const firstTwo = products.slice(0, 2);
+                    previewLines = firstTwo.map(p => {
+                        // 限制每行长度，移动端约25-30个字符，桌面端可更长
+                        let text = p.text || '';
+                        // 移除前后空白
+                        text = text.trim();
+                        // 限制长度，避免过长（约30-35个中文字符）
+                        if (text.length > 35) {
+                            text = text.substring(0, 35) + '...';
+                        }
+                        return text;
+                    }).filter(line => line.length > 0); // 过滤空行
+                }
+                
+                // 直接保存文本信息，不使用截图
+                const record = {
+                    id: 'record_' + timestamp,
+                    timestamp: timestamp,
+                    date: now.toLocaleString('zh-CN'),
+                    title: title || `历史记录 - ${now.toLocaleDateString('zh-CN')}`,
+                    thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTk5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj7liJvlu7rogIU8L3RleHQ+PC9zdmc+',
+                    source: source, // 添加来源字段
+                    productCount: products.length,
+                    products: products,
+                    previewText: previewLines // 添加预览文本字段
+                };
+                
+                historyRecords.unshift(record); // 最新记录放在最前面
+                saveRecords();
+                // 立即刷新日历与列表，不等待
+                renderCalendar();
+                renderRecords();
+                // 广播一次全局事件，供其他地方订阅
+                try {
+                    window.dispatchEvent(new CustomEvent('history:updated'));
+                } catch (e) {}
+                
+                // 使用全局通知系统
+                if (typeof showSuccessMessage === 'function') {
+                    showSuccessMessage('历史记录已保存！');
+                } else {
+                    alert('历史记录已保存！');
+                }
+            }
+            
+            function showSaveDialog(source) {
+                const title = prompt('请输入历史记录标题（留空将使用默认标题）：');
+                if (title === null) return; // 用户取消
+                saveRecord(source, title || undefined);
+            }
+            
+            function deleteRecord(recordId) {
+                if (confirm('确定要删除这条历史记录吗？')) {
+                    historyRecords = historyRecords.filter(r => r.id !== recordId);
+                    saveRecords();
+                    renderRecords();
+                }
+            }
+            
+            function viewRecord(recordId) {
+                const record = historyRecords.find(r => r.id === recordId);
+                if (!record) return;
+                
+                // 根据来源切换到相应界面
+                const source = record.source || 'productManager';
+                let targetTab = 'productManager';
+                let targetContainer = 'pm_resultsContainer';
+                
+                if (source === 'priceAdjuster') {
+                    targetTab = 'priceAdjuster';
+                    targetContainer = 'pa_resultArea';
+                } else if (source === 'symbolChanger') {
+                    targetTab = 'symbolChanger';
+                    targetContainer = 'sc_resultArea';
+                }
+                
+                // 切换到对应界面
+                switchTab(targetTab);
+                
+                setTimeout(() => {
+                    const container = document.getElementById(targetContainer);
+                    if (!container) return;
+                    
+                    container.innerHTML = '';
+                    
+                    if (source === 'productManager') {
+                        // 产品管理界面
+                        record.products.forEach((item, index) => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            div.innerHTML = `
+                                <input type="checkbox" class="result-checkbox" onchange="ProductManager.toggleSelectAll()">
+                                <div class="result-text" contenteditable="true">${item.text}</div>
+                            `;
+                            container.appendChild(div);
+                        });
+                    } else if (source === 'priceAdjuster') {
+                        // 价格调整界面（文本 + 新价；无价则仅文本）
+                        record.products.forEach((item, index) => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            const hasNewPrice = typeof item.newPrice !== 'undefined' && item.newPrice !== null && item.newPrice !== '';
+                            const priceHtml = hasNewPrice ? `<div class=\\"result-price\\"><span class=\\"result-price new\\">¥${item.newPrice}</span></div>` : `<div class=\\"result-price\\"></div>`;
+                            div.innerHTML = `
+                                <div class=\"result-content\">${item.text}</div>
+                                ${priceHtml}
+                            `;
+                            container.appendChild(div);
+                        });
+                    } else if (source === 'symbolChanger') {
+                        // 符号更换界面
+                        record.products.forEach((item, index) => {
+                            const div = document.createElement('div');
+                            div.className = 'result-item';
+                            div.innerHTML = `
+                                <div class="result-text">${item.text}</div>
+                            `;
+                            container.appendChild(div);
+                        });
+                    }
+                    
+                    // 使用全局通知系统
+                    if (typeof showSuccessMessage === 'function') {
+                        showSuccessMessage('历史记录已加载！');
+                    } else {
+                        alert('历史记录已加载！');
+                    }
+                }, 300);
+            }
+            
+            function showImage(recordId) {
+                const record = historyRecords.find(r => r.id === recordId);
+                if (!record) return;
+                
+                const modal = document.createElement('div');
+                modal.className = 'image-viewer-modal';
+                modal.innerHTML = `
+                    <button class="image-viewer-close" onclick="this.parentElement.remove()">&times;</button>
+                    <img src="${record.thumbnail}" class="image-viewer-img" id="viewerImg">
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // 简单的图片缩放支持
+                const img = modal.querySelector('#viewerImg');
+                let scale = 1;
+                let startDistance = 0;
+                
+                modal.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        startDistance = Math.hypot(
+                            touch1.clientX - touch2.clientX,
+                            touch1.clientY - touch2.clientY
+                        );
+                    }
+                });
+                
+                modal.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const touch1 = e.touches[0];
+                        const touch2 = e.touches[1];
+                        const distance = Math.hypot(
+                            touch1.clientX - touch2.clientX,
+                            touch1.clientY - touch2.clientY
+                        );
+                        
+                        scale = distance / startDistance;
+                        img.style.transform = `scale(${scale})`;
+                    }
+                });
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
+            }
+            
+            function enterCompareMode() {
+                isCompareMode = true;
+                selectedRecords = [];
+                document.getElementById('compareFloatingBtn').style.display = 'none';
+                renderRecords();
+            }
+            
+            function exitCompareMode() {
+                isCompareMode = false;
+                selectedRecords = [];
+                document.getElementById('compareFloatingBtn').style.display = 'none';
+                renderRecords();
+            }
+            
+            function toggleRecordSelection(recordId) {
+                if (!isCompareMode) return;
+                
+                const index = selectedRecords.indexOf(recordId);
+                if (index > -1) {
+                    selectedRecords.splice(index, 1);
+                } else {
+                    if (selectedRecords.length < 3) {
+                        selectedRecords.push(recordId);
+                    } else {
+                        alert('最多只能选择3条记录进行对比');
+                    }
+                }
+                
+                document.getElementById('compareCount').textContent = selectedRecords.length;
+                document.getElementById('compareFloatingBtn').style.display = selectedRecords.length > 0 ? 'block' : 'none';
+                
+                renderRecords();
+            }
+            
+            function startCompare() {
+                if (selectedRecords.length < 2) {
+                    alert('请至少选择2条记录进行对比');
+                    return;
+                }
+                
+                // 创建对比页面
+                const compareView = document.createElement('div');
+                compareView.id = 'compareView';
+                compareView.style.cssText = `
+                    position: fixed;
+                    top: 50px;
+                    left: 0;
+                    right: 0;
+                    bottom: 70px;
+                    background: white;
+                    z-index: 2000;
+                    overflow-y: auto;
+                    padding: 20px;
+                `;
+                
+                const selected = historyRecords.filter(r => selectedRecords.includes(r.id));
+                
+                // 提取所有产品进行对比
+                const productMap = {};
+                selected.forEach((record, index) => {
+                    record.products.forEach(product => {
+                        const key = product.text.split('：')[0]; // 用产品名称作为键
+                        if (!productMap[key]) {
+                            productMap[key] = {};
+                        }
+                        productMap[key][`record_${index}`] = {
+                            text: product.text,
+                            price: product.price
+                        };
+                    });
+                });
+                
+                let html = `
+                    <div style="margin-bottom: 30px;">
+                        <button onclick="document.getElementById('compareView').remove(); HistoryManager.exitCompareMode()" 
+                                style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">
+                            ← 返回</button>
+                        <h2 style="margin: 20px 0;">价格对比分析</h2>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            ${selected.map((r, i) => `
+                                <div style="background: #f0f8ff; padding: 10px; border-radius: 6px;">
+                                    <div><strong>记录${i+1}</strong></div>
+                                    <div style="font-size: 12px; color: #666;">${r.date}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background: white;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">产品名称</th>
+                                ${selected.map((_, i) => `<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">记录${i+1}价格</th>`).join('')}
+                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">变化趋势</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                Object.keys(productMap).forEach((key, i) => {
+                    const product = productMap[key];
+                    const prices = selected.map((_, index) => product['record_' + index]);
+                    
+                    const bgColor = i % 2 === 0 ? '#fff' : '#fafafa';
+                    
+                    html += '<tr>';
+                    html += '<td style="padding: 12px; border: 1px solid #ddd; background: ' + bgColor + ';">' + key + '</td>';
+                    
+                    prices.forEach((p) => {
+                        const price = p ? p.price : '-';
+                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd; background: ' + bgColor + ';">' + price + '</td>';
+                    });
+                    
+                    // 价格变化趋势
+                    const validPrices = prices.filter(function(p) { return p && p.price; }).map(function(p) {
+                        return parseFloat(p.price.replace(/,/g, ''));
+                    });
+                    if (validPrices.length >= 2) {
+                        const first = validPrices[0];
+                        const last = validPrices[validPrices.length - 1];
+                        const change = last - first;
+                        const percent = ((change / first) * 100).toFixed(1);
+                        const trend = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+                        const color = change > 0 ? '#e74c3c' : change < 0 ? '#27ae60' : '#999';
+                        
+                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd; color: ' + color + '; background: ' + bgColor + ';">';
+                        html += trend + ' ' + percent + '%';
+                        html += '</td>';
+                    } else {
+                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd;"></td>';
+                    }
+                    
+                    html += '</tr>';
+                });
+                
+                html += `
+                        </tbody>
+                    </table>
+                `;
+                
+                compareView.innerHTML = html;
+                document.body.appendChild(compareView);
+            }
+            
+            function filterRecords() {
+                const year = document.getElementById('historyYearSelect').value;
+                const month = document.getElementById('historyMonthSelect').value;
+                
+                let filtered = historyRecords;
+                
+                // 首先应用来源筛选
+                if (currentFilterSource !== 'all') {
+                    filtered = filtered.filter(r => (r.source || 'productManager') === currentFilterSource);
+                }
+                
+                if (year !== 'all') {
+                    filtered = filtered.filter(r => {
+                        const recordYear = new Date(r.timestamp).getFullYear();
+                        return recordYear.toString() === year;
+                    });
+                }
+                
+                if (month !== 'all') {
+                    filtered = filtered.filter(r => {
+                        const recordMonth = new Date(r.timestamp).getMonth() + 1;
+                        return recordMonth.toString() === month;
+                    });
+                }
+                
+                // 显示筛选结果
+                const container = document.getElementById('historyListContainer');
+                container.innerHTML = '';
+                
+                if (filtered.length === 0) {
+                    document.getElementById('historyEmptyState').style.display = 'block';
+                    return;
+                }
+                
+                document.getElementById('historyEmptyState').style.display = 'none';
+                
+                filtered.forEach(record => {
+                    const card = document.createElement('div');
+                    card.className = 'history-card';
+                    card.style.position = 'relative';
+                    
+                    card.innerHTML = `
+                        <img src="${record.thumbnail}" class="history-card-thumbnail" onclick="HistoryManager.showImage('${record.id}')">
+                        <div class="history-card-title">${record.title}</div>
+                        <div class="history-card-date">${record.date}</div>
+                        <div class="history-card-info">
+                            <span>产品数: ${record.productCount}</span>
+                        </div>
+                        <div class="history-card-actions">
+                            <button class="btn btn-secondary" onclick="HistoryManager.viewRecord('${record.id}')">查看</button>
+                            <button class="btn btn-danger" onclick="HistoryManager.deleteRecord('${record.id}')">删除</button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            function clearFilter() {
+                document.getElementById('historyYearSelect').value = 'all';
+                document.getElementById('historyMonthSelect').value = 'all';
+                renderRecords();
+            }
+            
+            function deleteAll() {
+                if (confirm('确定要清空所有历史记录吗？此操作不可恢复！')) {
+                    historyRecords = [];
+                    saveRecords();
+                    renderRecords();
+                }
+            }
+            
+            function findExplicitPrices(text) {
+                // 简化版价格提取，从 ProductManager 复制
+                const pricePattern = /(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+\.\d+)/g;
+                const matches = text.match(pricePattern);
+                return matches || [];
+            }
+            
+            // 新增：日期格式化辅助函数
+            function formatDateKey(year, month, day) {
+                return `${year}/${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
+            }
+            
+            function getDateKeyFromTimestamp(timestamp) {
+                const date = new Date(timestamp);
+                return formatDateKey(date.getFullYear(), date.getMonth() + 1, date.getDate());
+            }
+            
+            // 新增：来源筛选
+            let currentFilterSource = 'all';
+            function filterBySource(source) {
+                currentFilterSource = source;
+                
+                // 更新标签状态
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`.filter-tab[data-filter="${source}"]`)?.classList.add('active');
+                
+                // 重新渲染日历以更新记录条数
+                renderCalendar();
+                
+                renderRecords();
+            }
+            
+            // 新增：视图切换
+            let currentView = 'grid';
+            function switchView(view) {
+                currentView = view;
+                localStorage.setItem('historyView', view);
+                
+                const container = document.getElementById('historyListContainer');
+                container.className = `history-list ${view}-view`;
+                
+                // 更新按钮状态
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`.view-btn[data-view="${view}"]`)?.classList.add('active');
+            }
+            
+            // 新增：日历相关
+            let currentCalendarYear = new Date().getFullYear();
+            let currentCalendarMonth = new Date().getMonth() + 1;
+            let selectedDate = null;
+            
+            function initCalendar() {
+                console.log('initCalendar called');
+                console.log('historyRecords length:', historyRecords.length);
+                console.log('currentCalendarYear:', currentCalendarYear);
+                console.log('currentCalendarMonth:', currentCalendarMonth);
+                
+                renderCalendar();
+                loadSavedView();
+                
+                // 强制渲染历史记录
+                console.log('Forcing renderRecords...');
+                renderRecords();
+            }
+            
+            function renderCalendar() {
+                console.log('renderCalendar called');
+                
+                const firstDay = new Date(currentCalendarYear, currentCalendarMonth - 1, 1);
+                const lastDay = new Date(currentCalendarYear, currentCalendarMonth, 0);
+                const daysInMonth = lastDay.getDate();
+                const startDayOfWeek = firstDay.getDay();
+                
+                console.log('Calendar data:', { firstDay, lastDay, daysInMonth, startDayOfWeek });
+                
+                const calendarDays = document.getElementById('calendarDays');
+                const currentMonthEl = document.getElementById('calendarCurrentMonth');
+                
+                console.log('Calendar elements:', { calendarDays, currentMonthEl });
+                
+                if (!calendarDays || !currentMonthEl) {
+                    console.error('Calendar elements not found!');
+                    return;
+                }
+                
+                currentMonthEl.textContent = `${currentCalendarYear} / ${currentCalendarMonth}`;
+                
+                calendarDays.innerHTML = '';
+                
+                // 获取当月记录统计
+                const recordCounts = getRecordCountsByDate(currentCalendarYear, currentCalendarMonth);
+                console.log('Record counts:', recordCounts);
+                
+                // 填充空白日期
+                for (let i = 0; i < startDayOfWeek; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day';
+                    calendarDays.appendChild(emptyDay);
+                }
+                
+                // 填充日期格子
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayEl = document.createElement('div');
+                    const count = recordCounts[day] || 0;
+                    const isSelected = selectedDate && 
+                        selectedDate.year === currentCalendarYear && 
+                        selectedDate.month === currentCalendarMonth && 
+                        selectedDate.day === day;
+                    
+                    dayEl.className = `calendar-day ${count > 0 ? 'has-records' : ''} ${isSelected ? 'selected' : ''}`;
+                    dayEl.innerHTML = `
+                        <div class="calendar-day-number">${day}</div>
+                        ${count > 0 ? `<div class="calendar-day-count">${count}条</div>` : ''}
+                    `;
+                    dayEl.onclick = () => selectDate(day);
+                    
+                    calendarDays.appendChild(dayEl);
+                }
+            }
+            
+            function getRecordCountsByDate(year, month) {
+                const counts = {};
+                historyRecords.forEach(record => {
+                    const date = new Date(record.timestamp);
+                    if (date.getFullYear() === year && date.getMonth() + 1 === month) {
+                        // 根据当前筛选条件过滤
+                        if (currentFilterSource === 'all' || 
+                            (record.source || 'productManager') === currentFilterSource) {
+                            const day = date.getDate();
+                            counts[day] = (counts[day] || 0) + 1;
+                        }
+                    }
+                });
+                return counts;
+            }
+            
+            function selectDate(day) {
+                // 不设置 selectedDate，避免日期筛选
+                
+                // 隐藏日历，显示历史记录列表
+                document.querySelector('.calendar-picker').style.display = 'none';
+                document.getElementById('historyListContainer').style.display = 'grid';
+                
+                // 添加返回日历按钮
+                addBackToCalendarButton();
+                
+                // 渲染所有记录（按来源筛选）
+                renderRecords();
+                
+                // 滚动到指定日期
+                const dateKey = formatDateKey(currentCalendarYear, currentCalendarMonth, day);
+                const targetElement = document.getElementById(`date-${dateKey.replace(/\//g, '-')}`);
+                
+                console.log('Looking for date element:', `date-${dateKey.replace(/\//g, '-')}`);
+                console.log('Target element found:', targetElement);
+                
+                if (targetElement) {
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else {
+                    console.log('Target element not found, available elements:', 
+                        Array.from(document.querySelectorAll('[id^="date-"]')).map(el => el.id));
+                }
+            }
+            
+            function changeMonth(direction) {
+                currentCalendarMonth += direction;
+                
+                if (currentCalendarMonth < 1) {
+                    currentCalendarMonth = 12;
+                    currentCalendarYear--;
+                } else if (currentCalendarMonth > 12) {
+                    currentCalendarMonth = 1;
+                    currentCalendarYear++;
+                }
+                
+                renderCalendar();
+            }
+            
+            function showHistoryView() {
+                // 切换到历史记录界面
+                switchTab('historyViewer');
+            }
+            
+            function addBackToCalendarButton() {
+                // 检查是否已经存在返回按钮
+                if (document.getElementById('backToCalendarBtn')) {
+                    return;
+                }
+                // 仅在历史记录页显示
+                if (typeof currentTab !== 'undefined' && currentTab !== 'historyViewer') {
+                    return;
+                }
+                
+                const backBtn = document.createElement('div');
+                backBtn.id = 'backToCalendarBtn';
+                backBtn.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    left: 20px;
+                    z-index: 1000;
+                    background: #667eea;
+                    color: white;
+                    padding: 10px 15px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                `;
+                backBtn.innerHTML = '← 返回日历';
+                backBtn.onclick = backToCalendar;
+                
+                document.body.appendChild(backBtn);
+            }
+            
+            function backToCalendar() {
+                // 清除日期选择
+                selectedDate = null;
+                
+                // 显示日历，隐藏列表
+                document.querySelector('.calendar-picker').style.display = 'block';
+                document.getElementById('historyListContainer').style.display = 'none';
+                
+                // 移除返回按钮
+                const backBtn = document.getElementById('backToCalendarBtn');
+                if (backBtn) {
+                    backBtn.remove();
+                }
+                
+                // 重新渲染日历
+                renderCalendar();
+            }
+            
+            function displayFilteredRecords(filtered) {
+                const container = document.getElementById('historyListContainer');
+                const emptyState = document.getElementById('historyEmptyState');
+                
+                container.innerHTML = '';
+                
+                // 如果没有传入filtered参数，使用renderRecords进行筛选
+                if (!filtered) {
+                    renderRecords();
+                    return;
+                }
+                
+                if (filtered.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                
+                filtered.forEach(record => {
+                    const card = document.createElement('div');
+                    card.className = `history-card ${selectedRecords.includes(record.id) ? 'comparing' : ''}`;
+                    
+                    const sourceIcon = {
+                        'productManager': '📦',
+                        'priceAdjuster': '💰',
+                        'symbolChanger': '🔄'
+                    }[record.source || 'productManager'] || '📦';
+                    
+                    card.innerHTML = `
+                        <img src="${record.thumbnail}" class="history-card-thumbnail" onclick="HistoryManager.showImage('${record.id}')">
+                        <div class="history-card-title">${sourceIcon} ${record.title}</div>
+                        <div class="history-card-date">${record.date}</div>
+                        <div class="history-card-info">
+                            <span>产品数: ${record.productCount}</span>
+                        </div>
+                        <div class="history-card-actions">
+                            <button class="btn btn-secondary" onclick="HistoryManager.viewRecord('${record.id}')">查看</button>
+                            <button class="btn btn-danger" onclick="HistoryManager.deleteRecord('${record.id}')">删除</button>
+                        </div>
+                    `;
+                    
+                    if (isCompareMode) {
+                        card.onclick = () => toggleRecordSelection(record.id);
+                    }
+                    
+                    container.appendChild(card);
+                });
+            }
+            
+            function loadSavedView() {
+                const savedView = localStorage.getItem('historyView') || 'grid';
+                switchView(savedView);
+            }
+            
+            // HTML转义函数
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            // 更新 renderRecords 函数，支持筛选和视图
+            const originalRenderRecords = typeof renderRecords !== 'undefined' ? renderRecords : null;
+            renderRecords = function() {
+                console.log('=== renderRecords START ===');
+                console.log('currentFilterSource:', currentFilterSource);
+                console.log('Total records:', historyRecords.length);
+                
+                let filtered = historyRecords;
+                
+                // 只根据来源筛选，不限制日期
+                if (currentFilterSource !== 'all') {
+                    const beforeFilter = filtered.length;
+                    filtered = filtered.filter(r => (r.source || 'productManager') === currentFilterSource);
+                    console.log('Filter applied:', currentFilterSource, 'before:', beforeFilter, 'after:', filtered.length);
+                    if (filtered.length > 0) {
+                        console.log('Sample filtered sources:', filtered.slice(0, 3).map(r => r.source || 'productManager'));
+                    }
+                } else {
+                    console.log('No filter applied (showing all)');
+                }
+                
+                console.log('Filtered records:', filtered.length);
+                console.log('=== renderRecords END ===');
+                
+                const container = document.getElementById('historyListContainer');
+                const emptyState = document.getElementById('historyEmptyState');
+                
+                if (!container) {
+                    console.log('historyListContainer not found');
+                    return;
+                }
+                
+                if (filtered.length === 0) {
+                    if (emptyState) emptyState.style.display = 'block';
+                    container.innerHTML = '';
+                    return;
+                }
+                
+                if (emptyState) emptyState.style.display = 'none';
+                container.innerHTML = '';
+                
+                // 按日期分组
+                const groupedByDate = {};
+                filtered.forEach(record => {
+                    const dateKey = getDateKeyFromTimestamp(record.timestamp);
+                    if (!groupedByDate[dateKey]) {
+                        groupedByDate[dateKey] = [];
+                    }
+                    groupedByDate[dateKey].push(record);
+                });
+                
+                // 按日期降序排列
+                const sortedDates = Object.keys(groupedByDate).sort((a, b) => {
+                    return new Date(b) - new Date(a);
+                });
+                
+                // 渲染每个日期分组
+                sortedDates.forEach(dateKey => {
+                    // 添加日期标题
+                    const dateHeader = document.createElement('div');
+                    dateHeader.className = 'date-group-header';
+                    dateHeader.id = `date-${dateKey.replace(/\//g, '-')}`;
+                    dateHeader.innerHTML = `<h3>${dateKey}</h3>`;
+                    container.appendChild(dateHeader);
+                    
+                    // 渲染该日期的记录
+                    groupedByDate[dateKey].forEach(record => {
+                        const card = document.createElement('div');
+                        card.className = `history-card ${selectedRecords.includes(record.id) ? 'comparing' : ''}`;
+                        
+                        const sourceIcon = {
+                            'productManager': '📦',
+                            'priceAdjuster': '💰',
+                            'symbolChanger': '🔄'
+                        }[record.source || 'productManager'] || '📦';
+                        
+                        // 生成缩略图HTML：如果有预览文本则显示文本，否则显示占位图
+                        let thumbnailHtml = '';
+                        if (record.previewText && record.previewText.length > 0) {
+                            thumbnailHtml = `<div class="history-card-thumbnail-text" onclick="HistoryManager.viewRecord('${record.id}')">
+                                ${record.previewText.map(line => `<div class="preview-line">${escapeHtml(line || '')}</div>`).join('')}
+                            </div>`;
+                        } else {
+                            thumbnailHtml = `<img src="${record.thumbnail}" class="history-card-thumbnail" onclick="HistoryManager.showImage('${record.id}')">`;
+                        }
+                        
+                        card.innerHTML = `
+                            ${thumbnailHtml}
+                            <div class="history-card-title">${sourceIcon} ${record.title}</div>
+                            <div class="history-card-date">${record.date}</div>
+                            <div class="history-card-info">
+                                <span>产品数: ${record.productCount}</span>
+                            </div>
+                            <div class="history-card-actions">
+                                <button class="btn btn-secondary" onclick="HistoryManager.viewRecord('${record.id}')">查看</button>
+                                <button class="btn btn-danger" onclick="HistoryManager.deleteRecord('${record.id}')">删除</button>
+                            </div>
+                        `;
+                        
+                        if (isCompareMode) {
+                            card.onclick = () => toggleRecordSelection(record.id);
+                        }
+                        
+                        container.appendChild(card);
+                    });
+                });
+            };
+            
+            // 更新init函数
+            const originalInit = init;
+            init = function() {
+                originalInit();
+                
+                // 延迟初始化日历，确保DOM已加载
+                setTimeout(() => {
+                    console.log('HistoryManager init - starting calendar initialization');
+                    if (typeof initCalendar === 'function') {
+                        initCalendar();
+                    }
+                }, 100);
+            };
+            
+            return {
+                init: init,
+                saveRecord: saveRecord,
+                deleteRecord: deleteRecord,
+                viewRecord: viewRecord,
+                showImage: showImage,
+                showSaveDialog: showSaveDialog,
+                enterCompareMode: enterCompareMode,
+                exitCompareMode: exitCompareMode,
+                toggleRecordSelection: toggleRecordSelection,
+                startCompare: startCompare,
+                filterRecords: filterRecords,
+                clearFilter: clearFilter,
+                deleteAll: deleteAll,
+                renderRecords: renderRecords,
+                filterBySource: filterBySource,
+                switchView: switchView,
+                changeMonth: changeMonth,
+                selectDate: selectDate,
+                showHistoryView: showHistoryView,
+                displayFilteredRecords: displayFilteredRecords,
+                addBackToCalendarButton: addBackToCalendarButton,
+                backToCalendar: backToCalendar
+            };
+        })();
+        
+        // ========== 全局Tab切换逻辑 ==========
+        let currentTab = 'productManager'; // 默认显示产品管理
+        
+        // 确保在页面加载时初始化currentTab
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof currentTab === 'undefined') {
+                currentTab = 'productManager';
+            }
+        });
+        
+        function switchTab(tabName) {
+            // 确保currentTab已初始化
+            if (typeof currentTab === 'undefined') {
+                currentTab = 'productManager';
+            }
+            
+            console.log('Switching to tab:', tabName, 'currentTab:', currentTab);
+            
+            // 隐藏所有tab内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有nav-item的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示选中的tab内容
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // 激活对应的nav-item
+            const targetNavItem = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+            if (targetNavItem) {
+                targetNavItem.classList.add('active');
+            }
+            
+            // 更新顶部标题
+            const titles = {
+                'productManager': '产品管理',
+                'priceAdjuster': '价格调整',
+                'symbolChanger': '符号更换',
+                'historyViewer': '历史记录',
+                'membership': '会员中心',
+                'settings': '我的'
+            };
+            document.getElementById('topPageTitle').textContent = titles[tabName] || '家电报价助手';
+            
+            currentTab = tabName;
+            
+            // 如果切换到历史记录，强制刷新日历和记录
+            if (tabName === 'historyViewer') {
+                setTimeout(() => {
+                    console.log('Switched to historyViewer, force refreshing...');
+                    if (typeof HistoryManager !== 'undefined' && HistoryManager.renderRecords) {
+                        HistoryManager.renderRecords();
+                    }
+                    // 若当前处于列表视图（日历隐藏、列表可见），则重建返回日历按钮
+                    try {
+                        const calendarEl = document.querySelector('.calendar-picker');
+                        const listEl = document.getElementById('historyListContainer');
+                        const calendarHidden = calendarEl && getComputedStyle(calendarEl).display === 'none';
+                        const listVisible = listEl && getComputedStyle(listEl).display !== 'none';
+                        if (calendarHidden && listVisible && HistoryManager && HistoryManager.addBackToCalendarButton) {
+                            HistoryManager.addBackToCalendarButton();
+                        }
+                    } catch (e) { /* noop */ }
+                }, 100);
+            } else {
+                // 离开历史页时移除返回日历按钮
+                const backBtn = document.getElementById('backToCalendarBtn');
+                if (backBtn) backBtn.remove();
+            }
+        }
+        
+        function openCurrentPageMenu() {
+            alert('当前页面：' + document.getElementById('topPageTitle').textContent);
+        }
+        
         // ========== 初始化 ==========
         document.addEventListener('DOMContentLoaded', function() {
             ProductManager.init();
@@ -5518,6 +8048,8 @@
             SymbolChanger.init();
             Membership.init();
             Settings.init();
+            HistoryManager.init();
+            switchTab('productManager'); // 初始化显示产品管理页面
         });
         
         // 注册Service Worker
