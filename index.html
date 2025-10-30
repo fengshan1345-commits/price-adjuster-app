@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -792,7 +793,6 @@
             margin-right: 2vw; 
             min-width: 120px; 
         }
-        
         #priceAdjuster .control-input { 
             flex: 1; 
             padding: 2vw; 
@@ -1590,7 +1590,6 @@
             color: #e0e0e0 !important;
             border-color: #555 !important;
         }
-        
         .theme-dark .btn.btn-primary {
             background-color: #667eea !important;
             color: white !important;
@@ -2378,7 +2377,6 @@
             padding: 8px;
             font-size: 13px;
         }
-        
         .compare-floating-btn {
             position: fixed;
             bottom: 80px;
@@ -3155,7 +3153,6 @@
             </div>
         </div>
     </div>
-    
     <!-- 注册模态框 -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
@@ -3469,7 +3466,6 @@
             // 更新会员状态徽章
             updateMembershipBadge();
         });
-        
         // ========== 界面1：产品管理 JavaScript ==========
         const ProductManager = (function() {
             let parsedItems = [];
@@ -4071,7 +4067,6 @@
                 // 重新显示列表
                 sortAndDisplayItems();
             }
-            
             function setupDragAndDrop(element, index) {
                 const dragHandle = element.querySelector('.drag-handle');
                 let draggedElement = null;
@@ -4772,7 +4767,6 @@
                 init: init
             };
         })();
-        
         // ========== 界面2：价格调整 JavaScript ==========
         const PriceAdjuster = (function() {
             let parsedData = [];
@@ -5311,7 +5305,6 @@
                 togglePricingMode: togglePricingMode
             };
         })();
-        
         // ========== 界面3：符号更换 JavaScript ==========
         const SymbolChanger = (function() {
             let parsedData = [];
@@ -5798,55 +5791,43 @@
                             startIndex = bracketStart;
                         }
                     } else {
-                        // 第三步：如果没有方括号，删除价格前的符号，但保留括号
+                        // 第三步：如果没有方括号，删除价格前的分隔符，但保留字母/数字/中文和右括号
                         while (startIndex > 0) {
-                            // 检查是否是Emoji（需要处理代理对）
+                            // 预览待检查字符（支持 Emoji 代理对），不先移动指针，避免误删
                             let charLength = 1;
                             let char = line[startIndex - 1];
-                            
-                            // 检查是否是高代理对（Emoji的第一个字符）
+
                             if (startIndex > 1) {
                                 const prevChar = line[startIndex - 2];
                                 const currentChar = line[startIndex - 1];
-                                
-                                // 检查是否是代理对（Emoji）
                                 if (prevChar && currentChar) {
                                     const prevCode = prevChar.charCodeAt(0);
                                     const currentCode = currentChar.charCodeAt(0);
-                                    
-                                    // 高代理对范围：0xD800-0xDBFF，低代理对范围：0xDC00-0xDFFF
-                                    if (prevCode >= 0xD800 && prevCode <= 0xDBFF && 
+                                    // Emoji 代理对
+                                    if (prevCode >= 0xD800 && prevCode <= 0xDBFF &&
                                         currentCode >= 0xDC00 && currentCode <= 0xDFFF) {
                                         charLength = 2;
                                         char = line.substring(startIndex - 2, startIndex);
-                                        startIndex -= 2; // 跳过两个字符
-                                    } else {
-                                        startIndex--;
                                     }
-                                } else {
-                                    startIndex--;
                                 }
-                            } else {
-                                startIndex--;
                             }
-                            
-                            // 如果是字母、数字、中文，停止删除
-                            if (/[A-Za-z0-9\u4e00-\u9fa5]/.test(char)) {
+
+                            // 碰到字母/数字/中文或右括号，停止（不移动 startIndex）
+                            if (/[A-Za-z0-9\u4e00-\u9fa5]/.test(char) || char === ')' || char === '）') {
                                 break;
                             }
-                            
-                            // 如果是括号（中文或英文），停止删除
-                            if (char === ')' || char === '）') {
-                                break;
-                            }
-                            
-                            // 删除其他符号：价格符号、emoji、标点符号、斜杠等
+
+                            // 仅当是可删除的符号/Emoji/斜杠/空格时，才后退指针
                             const isPriceSymbol = /[¥$€£₹💰￥]/.test(char);
                             const isEmoji = isEmojiChar(char);
                             const isPunctuation = /[!@#$%^&*()_+=\[\]{}|;':",./<>?~`-]/.test(char);
+                            const isCnPunctuation = /[，。；：、！？“”‘’《》【】（）、．…—]/.test(char);
                             const isSlash = char === '/';
-                            
-                            if (!isPriceSymbol && !isEmoji && !isPunctuation && !isSlash) {
+                            const isFullSlash = char === '／';
+
+                            if (isPriceSymbol || isEmoji || isPunctuation || isCnPunctuation || isSlash || isFullSlash || /\s/.test(char)) {
+                                startIndex -= charLength; // 真正删除该符号
+                            } else {
                                 break;
                             }
                         }
@@ -5945,7 +5926,6 @@
                 copyResults: copyResults
             };
         })();
-        
         // ========== 会员系统 JavaScript ==========
         const Membership = (function() {
             let membershipData = {
@@ -6259,7 +6239,6 @@
                 copyReferralCode: copyReferralCode
             };
         })();
-        
         // ========== 设置系统 JavaScript ==========
         const Settings = (function() {
             let userData = {
@@ -6969,7 +6948,6 @@
                 logout: logout
             };
         })();
-        
         // ========== 历史记录管理器 ==========
         const HistoryManager = (function() {
             let historyRecords = [];
@@ -7033,7 +7011,7 @@
                         return;
                     }
                     
-                    // 提取产品信息（与“复制结果”一致，读取 .item-text；无价格也保存）
+                    // 提取产品信息（与"复制结果"一致，读取 .item-text；无价格也保存）
                     container.querySelectorAll('.result-item').forEach(item => {
                         const textEl = item.querySelector('.item-text');
                         const fallbackEl = item.querySelector('.result-text');
@@ -7076,7 +7054,7 @@
                         return;
                     }
                     
-                    // 提取符号更换后的数据：按“复制结果”的规则组合
+                    // 提取符号更换后的数据：按"复制结果"的规则组合
                     container.querySelectorAll('.result-item').forEach(item => {
                         const contentEl = item.querySelector('.result-content');
                         const priceEl = item.querySelector('.result-price');
@@ -7331,108 +7309,10 @@
                     alert('请至少选择2条记录进行对比');
                     return;
                 }
-                
-                // 创建对比页面
-                const compareView = document.createElement('div');
-                compareView.id = 'compareView';
-                compareView.style.cssText = `
-                    position: fixed;
-                    top: 50px;
-                    left: 0;
-                    right: 0;
-                    bottom: 70px;
-                    background: white;
-                    z-index: 2000;
-                    overflow-y: auto;
-                    padding: 20px;
-                `;
-                
                 const selected = historyRecords.filter(r => selectedRecords.includes(r.id));
-                
-                // 提取所有产品进行对比
-                const productMap = {};
-                selected.forEach((record, index) => {
-                    record.products.forEach(product => {
-                        const key = product.text.split('：')[0]; // 用产品名称作为键
-                        if (!productMap[key]) {
-                            productMap[key] = {};
-                        }
-                        productMap[key][`record_${index}`] = {
-                            text: product.text,
-                            price: product.price
-                        };
-                    });
-                });
-                
-                let html = `
-                    <div style="margin-bottom: 30px;">
-                        <button onclick="document.getElementById('compareView').remove(); HistoryManager.exitCompareMode()" 
-                                style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">
-                            ← 返回</button>
-                        <h2 style="margin: 20px 0;">价格对比分析</h2>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                            ${selected.map((r, i) => `
-                                <div style="background: #f0f8ff; padding: 10px; border-radius: 6px;">
-                                    <div><strong>记录${i+1}</strong></div>
-                                    <div style="font-size: 12px; color: #666;">${r.date}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background: white;">
-                        <thead>
-                            <tr style="background: #f5f5f5;">
-                                <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">产品名称</th>
-                                ${selected.map((_, i) => `<th style="padding: 12px; text-align: center; border: 1px solid #ddd;">记录${i+1}价格</th>`).join('')}
-                                <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">变化趋势</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                Object.keys(productMap).forEach((key, i) => {
-                    const product = productMap[key];
-                    const prices = selected.map((_, index) => product['record_' + index]);
-                    
-                    const bgColor = i % 2 === 0 ? '#fff' : '#fafafa';
-                    
-                    html += '<tr>';
-                    html += '<td style="padding: 12px; border: 1px solid #ddd; background: ' + bgColor + ';">' + key + '</td>';
-                    
-                    prices.forEach((p) => {
-                        const price = p ? p.price : '-';
-                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd; background: ' + bgColor + ';">' + price + '</td>';
-                    });
-                    
-                    // 价格变化趋势
-                    const validPrices = prices.filter(function(p) { return p && p.price; }).map(function(p) {
-                        return parseFloat(p.price.replace(/,/g, ''));
-                    });
-                    if (validPrices.length >= 2) {
-                        const first = validPrices[0];
-                        const last = validPrices[validPrices.length - 1];
-                        const change = last - first;
-                        const percent = ((change / first) * 100).toFixed(1);
-                        const trend = change > 0 ? '↑' : change < 0 ? '↓' : '→';
-                        const color = change > 0 ? '#e74c3c' : change < 0 ? '#27ae60' : '#999';
-                        
-                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd; color: ' + color + '; background: ' + bgColor + ';">';
-                        html += trend + ' ' + percent + '%';
-                        html += '</td>';
-                    } else {
-                        html += '<td style="padding: 12px; text-align: center; border: 1px solid #ddd;"></td>';
-                    }
-                    
-                    html += '</tr>';
-                });
-                
-                html += `
-                        </tbody>
-                    </table>
-                `;
-                
-                compareView.innerHTML = html;
-                document.body.appendChild(compareView);
+                if (selected.length >= 2) {
+                    try { CompareEngine.showWithRecords(selected[0], selected[1]); } catch(e) {}
+                }
             }
             
             function filterRecords() {
@@ -7747,7 +7627,6 @@
                 // 重新渲染日历
                 renderCalendar();
             }
-            
             function displayFilteredRecords(filtered) {
                 const container = document.getElementById('historyListContainer');
                 const emptyState = document.getElementById('historyEmptyState');
@@ -8049,6 +7928,55 @@
             Membership.init();
             Settings.init();
             HistoryManager.init();
+            // 动态注入“对比”页签与内容区
+            (function injectCompareTab(){
+                try {
+                    if (!document.querySelector('.nav-item[data-tab="compare"]')) {
+                        const nav = document.querySelector('.nav-bar');
+                        if (nav) {
+                            const btn = document.createElement('div');
+                            btn.className = 'nav-item';
+                            btn.setAttribute('data-tab','compare');
+                            btn.textContent = '对比';
+                            btn.onclick = function(){ switchTab('compare'); };
+                            nav.appendChild(btn);
+                        }
+                    }
+                    if (!document.getElementById('compare')) {
+                        const container = document.createElement('div');
+                        container.id = 'compare';
+                        container.className = 'tab-content';
+                        container.innerHTML = `
+                            <div style="padding:12px; display:grid; gap:12px;">
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                    <div>
+                                        <div style="margin-bottom:6px; font-weight:600;">左侧（旧报价）</div>
+                                        <textarea id="compareLeftInput" placeholder="粘贴旧报价..." style="width:100%;height:160px;"></textarea>
+                                    </div>
+                                    <div>
+                                        <div style="margin-bottom:6px; font-weight:600;">右侧（新报价）</div>
+                                        <textarea id="compareRightInput" placeholder="粘贴新报价..." style="width:100%;height:160px;"></textarea>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <button class="btn btn-primary" id="compareRunBtn">开始对比</button>
+                                    <button class="btn" id="compareCopyBtn">复制结果</button>
+                                </div>
+                                <div id="compareSummary" style="font-size:14px;color:#555"></div>
+                                <div id="compareResult" style="overflow:auto;"></div>
+                            </div>`;
+                        const tabRoot = document.querySelector('#app') || document.body;
+                        tabRoot.appendChild(container);
+                    }
+                } catch(e) {}
+            })();
+            // 绑定按钮事件（在注入后）
+            setTimeout(function(){
+                const runBtn = document.getElementById('compareRunBtn');
+                if (runBtn) runBtn.onclick = function(){ CompareEngine.compareFromInputs(); };
+                const copyBtn = document.getElementById('compareCopyBtn');
+                if (copyBtn) copyBtn.onclick = function(){ CompareEngine.copyCurrentResult(); };
+            }, 200);
             switchTab('productManager'); // 初始化显示产品管理页面
         });
         
@@ -8063,6 +7991,169 @@
                 });
         }
     </script>
+    <script>
+        // ========== CompareEngine：报价对比 ==========
+        const CompareEngine = (function(){
+            let lastResult = null;
+
+            function normalizeLine(line){
+                if (!line) return '';
+                return line
+                    .replace(/[\t\r]/g,'')
+                    .replace(/[\u3000]/g,' ')
+                    .replace(/\s+/g,' ')
+                    .trim();
+            }
+
+            function extractPrice(line){
+                const m = line.match(/(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+\.\d+|\d{3,})\s*(?:元|块|包邮|起)?\s*$/);
+                if (!m) return null;
+                return parseFloat(m[1].replace(/,/g,''));
+            }
+
+            function buildKey(line){
+                // 取最后一个价格之前的主体作为 key
+                const priceMatch = line.match(/(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+\.\d+|\d{3,})\s*(?:元|块|包邮|起)?\s*$/);
+                let key = line;
+                if (priceMatch) {
+                    key = line.substring(0, priceMatch.index).trim();
+                }
+                // 去尾部分隔符
+                key = key.replace(/[\/|，,。.;；:：]+$/,'').trim();
+                return key || line;
+            }
+
+            function parseList(text){
+                return text.split('\n')
+                    .map(normalizeLine)
+                    .filter(Boolean)
+                    .map(l => ({ key: buildKey(l), text: l, price: extractPrice(l) }));
+            }
+
+            function diff(leftItems, rightItems){
+                const leftMap = new Map();
+                const rightMap = new Map();
+                leftItems.forEach(it => leftMap.set(it.key, it));
+                rightItems.forEach(it => rightMap.set(it.key, it));
+
+                const keys = new Set([...leftMap.keys(), ...rightMap.keys()]);
+                const rows = [];
+                let inc=0, dec=0, equal=0, add=0, del=0, textChanged=0;
+                keys.forEach(k => {
+                    const L = leftMap.get(k);
+                    const R = rightMap.get(k);
+                    let status = '';
+                    let change = null;
+                    if (!L && R){ status='新增'; add++; }
+                    else if (L && !R){ status='删除'; del++; }
+                    else {
+                        const lp=L.price, rp=R.price;
+                        if (lp!=null && rp!=null){
+                            if (rp>lp){ status='价格↑'; change=((rp-lp)/lp*100).toFixed(1)+'%'; inc++; }
+                            else if (rp<lp){ status='价格↓'; change=((rp-lp)/lp*100).toFixed(1)+'%'; dec++; }
+                            else { status='不变'; equal++; }
+                        } else { status='对齐'; }
+                        if (L.text !== R.text){ textChanged++; }
+                    }
+                    rows.push({key:k,left:L||null,right:R||null,status:status,change:change});
+                });
+                return { rows, stats:{inc,dec,equal,add,del,textChanged} };
+            }
+
+            function render(result){
+                lastResult = result;
+                const sumEl = document.getElementById('compareSummary');
+                const out = document.getElementById('compareResult');
+                if (sumEl) {
+                    const s = result.stats;
+                    sumEl.textContent = `↑${s.inc} ↓${s.dec} =${s.equal} 新增${s.add} 删除${s.del} 文本改动${s.textChanged}`;
+                }
+                if (out) {
+                    let html = '';
+                    html += '<style>\n'
+                        + '.diff-up{color:#e74c3c;font-weight:600;} .diff-down{color:#27ae60;font-weight:600;} .diff-eq{color:#777;} .diff-add{background:#e3f2fd;} .diff-del{background:#ffebee;}\n'
+                        + '.cell{padding:8px;border:1px solid #ddd;vertical-align:top;} .th{padding:8px;border:1px solid #ddd;background:#f5f5f5;font-weight:600;}\n'
+                        + '</style>';
+                    html += '<table style="width:100%;border-collapse:collapse;">\n'
+                        + '<thead><tr>'
+                        + '<th class="th" style="width:36%">产品文本差异</th>'
+                        + '<th class="th" style="width:12%">价格A(旧)</th>'
+                        + '<th class="th" style="width:12%">价格B(新)</th>'
+                        + '<th class="th" style="width:20%">变化</th>'
+                        + '<th class="th" style="width:20%">状态</th>'
+                        + '</tr></thead><tbody>';
+
+                    result.rows.forEach(r=>{
+                        const lp = r.left && r.left.price!=null ? r.left.price : '';
+                        const rp = r.right && r.right.price!=null ? r.right.price : '';
+                        const state = r.status || '';
+                        const cls = state.includes('↑')? 'diff-up' : state.includes('↓')? 'diff-down' : 'diff-eq';
+                        const leftText = r.left? r.left.text : '';
+                        const rightText = r.right? r.right.text : '';
+                        const textHtml = buildTextDiffHtml(leftText, rightText);
+                        const changeHtml = (r.change? (state + ' ' + r.change) : state);
+                        html += '<tr>'
+                          + '<td class="cell">'+ textHtml +'</td>'
+                          + '<td class="cell">'+ (lp!==''? ('¥'+lp): '') +'</td>'
+                          + '<td class="cell">'+ (rp!==''? ('¥'+rp): '') +'</td>'
+                          + '<td class="cell '+cls+'">'+ changeHtml +'</td>'
+                          + '<td class="cell">'+ escapeHtml(r.key) +'</td>'
+                          + '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    out.innerHTML = html;
+                }
+            }
+
+            // 简易文本差异高亮：保留公共前后缀，仅高亮中间差异
+            function buildTextDiffHtml(a, b){
+                a = a || ''; b = b || '';
+                if (a === b) return '<div class="diff-eq">'+escapeHtml(a)+'</div>';
+                let i=0; while (i<a.length && i<b.length && a[i]===b[i]) i++;
+                let j=0; while (j<a.length-i && j<b.length-i && a[a.length-1-j]===b[b.length-1-j]) j++;
+                const pre = a.substring(0,i);
+                const aMid = a.substring(i, a.length-j);
+                const bMid = b.substring(i, b.length-j);
+                const suf = a.substring(a.length-j);
+                const aHtml = escapeHtml(pre) + '<span class="diff-del">' + escapeHtml(aMid) + '</span>' + escapeHtml(suf);
+                const bHtml = escapeHtml(pre) + '<span class="diff-add">' + escapeHtml(bMid) + '</span>' + escapeHtml(suf);
+                return '<div>'+aHtml+'</div><div>'+bHtml+'</div>';
+            }
+
+            function compareFromInputs(){
+                const L = document.getElementById('compareLeftInput')?.value || '';
+                const R = document.getElementById('compareRightInput')?.value || '';
+                const left = parseList(L);
+                const right = parseList(R);
+                render(diff(left,right));
+            }
+
+            function showWithRecords(leftRecord, rightRecord){
+                try { switchTab('compare'); } catch(e){}
+                // 将历史记录产品转为文本列表
+                const toText = rec => (rec.products||[]).map(p=>p.text||'').join('\n');
+                const leftText = toText(leftRecord);
+                const rightText = toText(rightRecord);
+                const li = document.getElementById('compareLeftInput');
+                const ri = document.getElementById('compareRightInput');
+                if (li) li.value = leftText;
+                if (ri) ri.value = rightText;
+                render(diff(parseList(leftText), parseList(rightText)));
+            }
+
+            function copyCurrentResult(){
+                if (!lastResult) return;
+                const lines = lastResult.rows.map(r=>{
+                    const l = r.left? (r.left.price!=null? r.left.price:'') : '';
+                    const rr = r.right? (r.right.price!=null? r.right.price:'') : '';
+                    return `${r.key}\t${l}\t${rr}\t${r.status}${r.change?(' '+r.change):''}`;
+                });
+                const text = lines.join('\n');
+                navigator.clipboard.writeText(text).then(()=>{ try{ showSuccessMessage('对比结果已复制'); }catch(e){ alert('已复制'); } });
+            }
+
+            return { parseList, diff, render, compareFromInputs, showWithRecords, copyCurrentResult };
+        })();
+    </script>
 </body>
 </html>
-
